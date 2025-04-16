@@ -72,3 +72,16 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Custom
+/.vsconfig
+/packages.config
+/ContentPackages
+/UIElementsSchema
+/Assets/PrintablesAR/Models
+/Assets/PrintablesAR/Models.meta
+/Assets/PrintablesAR/Todo.md
+/Assets/PrintablesAR/Todo.md.meta
+/Assets/Unity Boilerplate.meta
+/Assets/Unity Boilerplate
