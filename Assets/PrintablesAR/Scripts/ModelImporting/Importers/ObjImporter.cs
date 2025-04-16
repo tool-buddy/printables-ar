@@ -24,18 +24,18 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
         /// <inheritdoc/>
         public event Action<string, string> ImportFailed;
 
-        [NotNull] private ObjectImporter objImporter => GetComponent<ObjectImporter>();
+        [NotNull] private ObjectImporter ObjectImporter => GetComponent<ObjectImporter>();
 
         private void Awake()
         {
-            ObjectImporter importer = objImporter;
+            ObjectImporter importer = ObjectImporter;
             importer.ImportedModel += OnModelImported;
             importer.ImportError += OnImportError;
         }
 
         private void OnDestroy()
         {
-            ObjectImporter importer = objImporter;
+            ObjectImporter importer = ObjectImporter;
             importer.ImportedModel -= OnModelImported;
             importer.ImportError -= OnImportError;
         }
@@ -82,7 +82,7 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
         public bool TryImport(
             string filePath)
         {
-            LoadOBJAsync(
+            LoadObjAsync(
                 filePath
             );
 
@@ -93,7 +93,7 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
         /// Asynchronously loads the OBJ file and creates mesh.
         /// </summary>
         /// <param name="filePath">Path to the OBJ file.</param>
-        private void LoadOBJAsync(
+        private void LoadObjAsync(
             string filePath)
         {
             ImportOptions importOptions = new ImportOptions
@@ -111,7 +111,7 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
                 //todo fix inheritLayer set to true bugging when parent is null if needed, and create a push request
             };
 
-            objImporter.ImportModelAsync(
+            ObjectImporter.ImportModelAsync(
                 "imported_model",
                 filePath,
                 transform,

@@ -8,11 +8,11 @@ namespace ToolBuddy.PrintableAR
     /// </summary>
     public class UIStateMachine : StateMachine<UIState, UITrigger>
     {
-        private VisualElement baseUI;
-        private VisualElement noModelUnderlay;
-        private VisualElement loadingOverlay;
-        private VisualElement errorOverlay;
-        private VisualElement helpOverlay;
+        private VisualElement _baseUi;
+        private VisualElement _noModelUnderlay;
+        private VisualElement _loadingOverlay;
+        private VisualElement _errorOverlay;
+        private VisualElement _helpOverlay;
 
         public UIStateMachine(
             UIDocument uiDocument) : base(UIState.Initialization)
@@ -37,20 +37,20 @@ namespace ToolBuddy.PrintableAR
             VisualElement rootVisualElement = uiDocument.rootVisualElement;
 
             // Get screen elements
-            baseUI = rootVisualElement.Q<VisualElement>("base-ui");
-            noModelUnderlay = rootVisualElement.Q<VisualElement>("no-model-underlay");
-            loadingOverlay = rootVisualElement.Q<VisualElement>("loading-overlay");
-            errorOverlay = rootVisualElement.Q<VisualElement>("error-overlay");
-            helpOverlay = rootVisualElement.Q<VisualElement>("help-overlay");
+            _baseUi = rootVisualElement.Q<VisualElement>("base-ui");
+            _noModelUnderlay = rootVisualElement.Q<VisualElement>("no-model-underlay");
+            _loadingOverlay = rootVisualElement.Q<VisualElement>("loading-overlay");
+            _errorOverlay = rootVisualElement.Q<VisualElement>("error-overlay");
+            _helpOverlay = rootVisualElement.Q<VisualElement>("help-overlay");
         }
 
         private void SetElementsInitialVisibility()
         {
-            baseUI.style.display = DisplayStyle.Flex;
-            noModelUnderlay.style.display = DisplayStyle.None;
-            loadingOverlay.style.display = DisplayStyle.None;
-            errorOverlay.style.display = DisplayStyle.None;
-            helpOverlay.style.display = DisplayStyle.None;
+            _baseUi.style.display = DisplayStyle.Flex;
+            _noModelUnderlay.style.display = DisplayStyle.None;
+            _loadingOverlay.style.display = DisplayStyle.None;
+            _errorOverlay.style.display = DisplayStyle.None;
+            _helpOverlay.style.display = DisplayStyle.None;
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace ToolBuddy.PrintableAR
 
             rootVisualElement.pickingMode = PickingMode.Ignore;
             rootVisualElement.Q<VisualElement>("root").pickingMode = PickingMode.Ignore;
-            baseUI.pickingMode = PickingMode.Ignore;
-            noModelUnderlay.pickingMode = PickingMode.Ignore;
+            _baseUi.pickingMode = PickingMode.Ignore;
+            _noModelUnderlay.pickingMode = PickingMode.Ignore;
             rootVisualElement.Q<VisualElement>("button-container").pickingMode = PickingMode.Ignore;
         }
 
@@ -83,8 +83,8 @@ namespace ToolBuddy.PrintableAR
                 );
 
             Configure(UIState.NoModelLoaded)
-                .OnEntry(() => noModelUnderlay.style.display = DisplayStyle.Flex)
-                .OnExit(() => noModelUnderlay.style.display = DisplayStyle.None)
+                .OnEntry(() => _noModelUnderlay.style.display = DisplayStyle.Flex)
+                .OnExit(() => _noModelUnderlay.style.display = DisplayStyle.None)
                 .Permit(
                     UITrigger.LoadModel,
                     UIState.ModelLoading
@@ -92,8 +92,8 @@ namespace ToolBuddy.PrintableAR
 
             //todo handle animation
             Configure(UIState.ModelLoading)
-                .OnEntry(() => loadingOverlay.style.display = DisplayStyle.Flex)
-                .OnExit(() => loadingOverlay.style.display = DisplayStyle.None)
+                .OnEntry(() => _loadingOverlay.style.display = DisplayStyle.Flex)
+                .OnExit(() => _loadingOverlay.style.display = DisplayStyle.None)
                 .Permit(
                     UITrigger.ModelLoadingSuccess,
                     UIState.ModelPlacement
@@ -106,10 +106,10 @@ namespace ToolBuddy.PrintableAR
             Configure(UIState.LoadingError)
                 .OnEntryFrom(
                     SetTriggerParameters<string>(UITrigger.ModelLoadingError),
-                    errorMessage => { errorOverlay.Q<Label>("error-message").text = errorMessage; }
+                    errorMessage => { _errorOverlay.Q<Label>("error-message").text = errorMessage; }
                 )
-                .OnEntry(() => errorOverlay.style.display = DisplayStyle.Flex)
-                .OnExit(() => errorOverlay.style.display = DisplayStyle.None)
+                .OnEntry(() => _errorOverlay.style.display = DisplayStyle.Flex)
+                .OnExit(() => _errorOverlay.style.display = DisplayStyle.None)
                 .Permit(
                     UITrigger.Reset,
                     UIState.NoModelLoaded

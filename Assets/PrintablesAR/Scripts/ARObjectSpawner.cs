@@ -1,6 +1,6 @@
 using System;
-using JetBrains.Annotations;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using ToolBuddy.PrintableAR.ModelImporting;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -14,34 +14,33 @@ namespace ToolBuddy.PrintableAR
     //todo rename
     public class ARObjectSpawner : TouchMonoBehaviour
     {
-
         private void Awake()
         {
-            modelImporter = FindFirstObjectByType<ModelImporter>();
-            arRaycastManager = FindFirstObjectByType<ARRaycastManager>();
+            _modelImporter = FindFirstObjectByType<ModelImporter>();
+            _arRaycastManager = FindFirstObjectByType<ARRaycastManager>();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            modelImporter.ImportSucceeded += OnModelImportSucceeded;
-            modelImporter.ImportFailed += OnModelImportFailed;
+            _modelImporter.ImportSucceeded += OnModelImportSucceeded;
+            _modelImporter.ImportFailed += OnModelImportFailed;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            modelImporter.ImportSucceeded -= OnModelImportSucceeded;
-            modelImporter.ImportFailed -= OnModelImportFailed;
+            _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
+            _modelImporter.ImportFailed -= OnModelImportFailed;
         }
 
         #region Touch processing
 
-        private ARRaycastManager arRaycastManager;
+        private ARRaycastManager _arRaycastManager;
 
         //todo rename to hits cache?
-        private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+        private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
 
         protected override void ProcessFingerDown(
             Finger finger)
@@ -53,25 +52,30 @@ namespace ToolBuddy.PrintableAR
 
             //todo better error handling
             Assert.IsNotNull(
-                importedModel,
+                _importedModel,
                 "Loaded model is null, cannot spawn object."
             );
 
-            if (arRaycastManager.Raycast(
+            if (_arRaycastManager.Raycast(
                     finger.screenPosition,
-                    hits,
+                    _hits,
                     TrackableType.PlaneWithinPolygon
                 ))
 
             {
-                ARObjectManipulator.PlaceObjectAtHit(importedModel.transform, hits[0].pose);
-                importedModel.gameObject.SetActive(true);
+                ARObjectManipulator.PlaceObjectAtHit(
+                    _importedModel.transform,
+                    _hits[0].pose
+                );
+                _importedModel.gameObject.SetActive(true);
             }
         }
 
-        protected override void ProcessFingerMove(Finger finger) { }
+        protected override void ProcessFingerMove(
+            Finger finger) { }
 
-        protected override void ProcessFingerUp(Finger finger) { }
+        protected override void ProcessFingerUp(
+            Finger finger) { }
 
         #endregion
 
@@ -81,27 +85,26 @@ namespace ToolBuddy.PrintableAR
         //todo move to another file
 
         [CanBeNull]
-        private GameObject importedModel;
+        private GameObject _importedModel;
 
-        private ModelImporter modelImporter;
+        private ModelImporter _modelImporter;
 
-        private bool IsModelSpawned => importedModel && importedModel.activeSelf;
+        private bool IsModelSpawned => _importedModel && _importedModel.activeSelf;
 
         private static Lazy<Material> DefaultMaterial =>
             new Lazy<Material>(Resources.Load<Material>("Grid"));
 
         private void OnModelImportSucceeded(
-            [NotNull] GameObject loadedOBJ,
+            [NotNull] GameObject loadedObj,
             string filePath)
         {
             //todo delete previous instance
 
-            importedModel = loadedOBJ;
+            _importedModel = loadedObj;
 
-            SetupMaterial(importedModel);
-            importedModel.gameObject.SetActive(false);
-            importedModel.AddComponent<ARObjectManipulator>();
-
+            SetupMaterial(_importedModel);
+            _importedModel.gameObject.SetActive(false);
+            _importedModel.AddComponent<ARObjectManipulator>();
         }
 
         private void SetupMaterial(
@@ -115,10 +118,8 @@ namespace ToolBuddy.PrintableAR
 
         private void OnModelImportFailed(
             string errorMessage,
-            string filePath)
-        {
-            importedModel = null;
-        }
+            string filePath) =>
+            _importedModel = null;
 
         #endregion
     }

@@ -12,65 +12,65 @@ namespace ToolBuddy.PrintableAR
     /// </summary>
     public partial class UIController : MonoBehaviour
     {
-        private UIDocument uiDocument;
-        private VisualElement root;
+        private UIDocument _uiDocument;
+        private VisualElement _root;
 
-        private Button loadButton;
-        private Button helpButton;
-        private Button creatorButton;
-        private Button closeErrorButton;
+        private Button _loadButton;
+        private Button _helpButton;
+        private Button _creatorButton;
+        private Button _closeErrorButton;
 
-        private VisualElement helpPanel;
-        private Button closeHelpButton;
+        private VisualElement _helpPanel;
+        private Button _closeHelpButton;
 
-        private UIStateMachine stateMachine;
+        private UIStateMachine _stateMachine;
 
-        private ModelImporter modelImporter;
+        private ModelImporter _modelImporter;
 
         private void Awake()
         {
-            uiDocument = GetComponent<UIDocument>();
-            modelImporter = FindFirstObjectByType<ModelImporter>();
+            _uiDocument = GetComponent<UIDocument>();
+            _modelImporter = FindFirstObjectByType<ModelImporter>();
 
-            stateMachine = new UIStateMachine(uiDocument);
+            _stateMachine = new UIStateMachine(_uiDocument);
         }
 
         private void OnEnable()
         {
-            root = uiDocument.rootVisualElement;
+            _root = _uiDocument.rootVisualElement;
 
-            loadButton = root.Q<Button>("load-button");
-            helpButton = root.Q<Button>("help-button");
-            creatorButton = root.Q<Button>("creator-button");
-            closeErrorButton = root.Q<Button>("close-error-button");
+            _loadButton = _root.Q<Button>("load-button");
+            _helpButton = _root.Q<Button>("help-button");
+            _creatorButton = _root.Q<Button>("creator-button");
+            _closeErrorButton = _root.Q<Button>("close-error-button");
 
-            helpPanel = root.Q<VisualElement>("help-overlay");
-            closeHelpButton = root.Q<Button>("close-help-button");
+            _helpPanel = _root.Q<VisualElement>("help-overlay");
+            _closeHelpButton = _root.Q<Button>("close-help-button");
 
-            loadButton.clicked += OnLoadButtonClicked;
-            helpButton.clicked += OnHelpButtonClicked;
-            creatorButton.clicked += OnCreatorButtonClicked;
-            closeHelpButton.clicked += OnCloseHelpButtonClicked;
-            closeErrorButton.clicked += OnCloseErrorButtonClicked;
+            _loadButton.clicked += OnLoadButtonClicked;
+            _helpButton.clicked += OnHelpButtonClicked;
+            _creatorButton.clicked += OnCreatorButtonClicked;
+            _closeHelpButton.clicked += OnCloseHelpButtonClicked;
+            _closeErrorButton.clicked += OnCloseErrorButtonClicked;
 
-            modelImporter.ImportSucceeded += OnModelImportSucceeded;
-            modelImporter.ImportFailed += OnModelImportFailed;
+            _modelImporter.ImportSucceeded += OnModelImportSucceeded;
+            _modelImporter.ImportFailed += OnModelImportFailed;
 
-            stateMachine.Activate();
+            _stateMachine.Activate();
         }
 
         private void OnDisable()
         {
-            if (loadButton != null) loadButton.clicked -= OnLoadButtonClicked;
-            if (helpButton != null) helpButton.clicked -= OnHelpButtonClicked;
-            if (creatorButton != null) creatorButton.clicked -= OnCreatorButtonClicked;
-            if (closeHelpButton != null) closeHelpButton.clicked -= OnCloseHelpButtonClicked;
-            if (closeErrorButton != null) closeErrorButton.clicked -= OnCloseErrorButtonClicked;
+            if (_loadButton != null) _loadButton.clicked -= OnLoadButtonClicked;
+            if (_helpButton != null) _helpButton.clicked -= OnHelpButtonClicked;
+            if (_creatorButton != null) _creatorButton.clicked -= OnCreatorButtonClicked;
+            if (_closeHelpButton != null) _closeHelpButton.clicked -= OnCloseHelpButtonClicked;
+            if (_closeErrorButton != null) _closeErrorButton.clicked -= OnCloseErrorButtonClicked;
 
-            modelImporter.ImportSucceeded -= OnModelImportSucceeded;
-            modelImporter.ImportFailed -= OnModelImportFailed;
+            _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
+            _modelImporter.ImportFailed -= OnModelImportFailed;
 
-            stateMachine.Deactivate();
+            _stateMachine.Deactivate();
         }
 
         #region Event Handlers
@@ -92,10 +92,10 @@ namespace ToolBuddy.PrintableAR
                 //user cancelled file selection
                 return;
 
-            stateMachine.Fire(UITrigger.LoadModel);
+            _stateMachine.Fire(UITrigger.LoadModel);
 
             if (!File.Exists(path))
-                stateMachine.Fire(
+                _stateMachine.Fire(
                     new StateMachine<UIState, UITrigger>.TriggerWithParameters<string>(UITrigger.ModelLoadingError),
                     String.Format(
                         ErrorMessages.FileNotExisting,
@@ -105,24 +105,24 @@ namespace ToolBuddy.PrintableAR
             else
                 try
                 {
-                    bool startedImporting = modelImporter.TryImport(path);
+                    bool startedImporting = _modelImporter.TryImport(path);
                     if (startedImporting == false)
                         //todo Add a Fire(State,Data) method
-                        stateMachine.Fire(
+                        _stateMachine.Fire(
                             new StateMachine<UIState, UITrigger>.TriggerWithParameters<string>(UITrigger.ModelLoadingError),
                             String.Format(
                                 ErrorMessages.UnsupportedFileFormat,
                                 Path.GetExtension(path),
                                 String.Join(
                                     ", ",
-                                    modelImporter.SupportedFileFormats
+                                    _modelImporter.SupportedFileFormats
                                 )
                             )
                         );
                 }
                 catch (Exception e)
                 {
-                    stateMachine.Fire(
+                    _stateMachine.Fire(
                         new StateMachine<UIState, UITrigger>.TriggerWithParameters<string>(UITrigger.ModelLoadingError),
                         String.Format(
                             ErrorMessages.LoadingError,
@@ -141,7 +141,7 @@ namespace ToolBuddy.PrintableAR
             string filePath)
         {
             //todo test this
-            stateMachine.Fire(
+            _stateMachine.Fire(
                 new StateMachine<UIState, UITrigger>.TriggerWithParameters<string>(
                     UITrigger.ModelLoadingError
                 ),
@@ -158,10 +158,10 @@ namespace ToolBuddy.PrintableAR
         /// Handles successful model import.
         /// </summary>
         private void OnModelImportSucceeded(
-            GameObject loadedOBJ,
+            GameObject loadedObj,
             string filePath)
         {
-            stateMachine.Fire(UITrigger.ModelLoadingSuccess);
+            _stateMachine.Fire(UITrigger.ModelLoadingSuccess);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace ToolBuddy.PrintableAR
         /// </summary>
         private void OnCloseErrorButtonClicked()
         {
-            stateMachine.Fire(UITrigger.Reset);
+            _stateMachine.Fire(UITrigger.Reset);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace ToolBuddy.PrintableAR
         /// </summary>
         private void OnHelpButtonClicked()
         {
-            helpPanel.style.display = DisplayStyle.Flex;
+            _helpPanel.style.display = DisplayStyle.Flex;
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace ToolBuddy.PrintableAR
         private void OnCloseHelpButtonClicked()
         {
             //todo handle the go back button in the mobile interface
-            helpPanel.style.display = DisplayStyle.None;
+            _helpPanel.style.display = DisplayStyle.None;
         }
 
         /// <summary>
