@@ -53,8 +53,7 @@ namespace ToolBuddy.PrintableAR
 
         private StateMachine<State, Trigger> _stateMachine;
 
-        [Header("AR Setup")]
-        public ARRaycastManager ArRaycastManager;
+        private ARRaycastManager _arRaycastManager;
 
         //todo rename to hits cache?
         private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
@@ -91,6 +90,7 @@ namespace ToolBuddy.PrintableAR
 
         private void Awake()
         {
+            _arRaycastManager = FindFirstObjectByType<ARRaycastManager>();
             SetupStateMachine();
         }
 
@@ -271,7 +271,7 @@ namespace ToolBuddy.PrintableAR
         private bool TryPlaceObjectAt(
             Vector2 screenPoint)
         {
-            if (!ArRaycastManager.Raycast(
+            if (!_arRaycastManager.Raycast(
                     screenPoint,
                     _hits,
                     TrackableType.PlaneWithinPolygon
