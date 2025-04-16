@@ -3,7 +3,7 @@
 An augmented reality (AR) mobile application for previewing 3D printing models in a real-world environment.
 
 
-## Development status
+## Development Status
 
 - **Proof of Concept with .obj files:** Complete
 - **Major Code Cleaning and Refactoring:** Work in Progress
