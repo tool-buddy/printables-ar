@@ -1,0 +1,61 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Help.uss?fileID=7433441132597879392&amp;guid=a82893a87ab884f4c99f01749a10c783&amp;type=3#Help" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Error.uss?fileID=7433441132597879392&amp;guid=6632d6c2f130ecd4098ea8c724a12bc4&amp;type=3#Error" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Loading.uss?fileID=7433441132597879392&amp;guid=2cce36fb1af41e340b8a5c39332a2c1d&amp;type=3#Loading" />
+    <ui:VisualElement name="root" style="flex-grow: 1;">
+        <ui:VisualElement name="no-model-underlay" style="justify-content: center; align-self: auto; align-items: center; align-content: auto; background-color: rgba(255, 255, 255, 0.36); width: 100%; height: 100%; position: absolute;">
+            <ui:VisualElement name="text-container" style="flex-grow: 1; justify-content: center;">
+                <ui:Label text="No model loaded" name="main-message" class="header-1 wrappable-text" />
+                <ui:Label text="Tap &apos;Load&apos; to load a model." name="sub-message" class="header-2 wrappable-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="base-ui" style="width: 100%; height: 100%; position: absolute;">
+            <ui:VisualElement name="button-container" style="flex-grow: 1; flex-direction: column; margin-right: 20px; justify-content: flex-end; align-items: flex-end; margin-bottom: 20px;">
+                <ui:Button name="load-button" class="app-button">
+                    <ui:Label text="Load" name="button-text" class="button-text" />
+                    <ui:VisualElement name="cube-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/cube-icon.png?fileID=2800000&amp;guid=d4116cb703d41ff43a554e5c7a9210e8&amp;type=3#cube-icon&quot;);" />
+                </ui:Button>
+                <ui:Button name="help-button" class="app-button">
+                    <ui:Label text="Help" name="button-text" class="button-text" />
+                    <ui:VisualElement name="help-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/help-icon.png?fileID=2800000&amp;guid=14cabf11b53b2744cb9933380bf9fb4e&amp;type=3#help-icon&quot;);" />
+                </ui:Button>
+                <ui:Button name="creator-button" class="app-button">
+                    <ui:Label text="ToolBuddy" name="button-text" class="button-text" />
+                    <ui:VisualElement name="globe-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/toolbuddy.png?fileID=2800000&amp;guid=58aa1d482420edd4caf783023d6ed7ce&amp;type=3#toolbuddy&quot;);" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="loading-overlay" class="overlay-panel loading-overlay">
+            <ui:VisualElement name="loading-content" class="panel-content loading-content">
+                <ui:VisualElement name="loading-spinner" class="loading-spinner" />
+                <ui:Label text="Loading model..." name="loading-text" class="loading-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="error-overlay" class="overlay-panel error-overlay" style="display: none;">
+            <ui:VisualElement name="error-content" class="panel-content error-content">
+                <ui:VisualElement name="error-icon" class="error-icon">
+                    <ui:Label text="×" name="error-x" class="error-x" />
+                </ui:VisualElement>
+                <ui:Label text="Error Loading Model" name="error-title" class="error-title" />
+                <ui:Label text="There was a problem loading the model file. Please try a different file. File path was &quot;undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined&quot;" name="error-message" class="error-message wrappable-text" />
+                <ui:Button name="close-error-button" class="error-button">
+                    <ui:Label text="Close" name="close-text" class="button-text" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="help-overlay" class="help-panel">
+            <ui:VisualElement name="help-content" class="help-content">
+                <ui:Label text="Model Controls" name="help-title" class="help-title" />
+                <ui:VisualElement name="help-instructions" class="help-instructions">
+                    <ui:Label text="• Rotate: Drag with one finger" class="instruction-text" />
+                    <ui:Label text="• Scale: Pinch with two fingers" class="instruction-text" />
+                    <ui:Label text="• Move: Tap on surface to place" class="instruction-text" />
+                </ui:VisualElement>
+                <ui:Button name="close-help-button" class="close-button">
+                    <ui:Label text="Close" name="close-text" class="button-text" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

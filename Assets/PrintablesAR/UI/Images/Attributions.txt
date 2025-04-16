@@ -1,0 +1,2 @@
+help-icon: https://icon-library.com/icon/help-icon-png-0.html
+toolbuddy: https://openclipart.org/detail/176399/workers-unite-hammer-and-keyboard

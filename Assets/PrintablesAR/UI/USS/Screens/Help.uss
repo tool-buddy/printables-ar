@@ -1,0 +1,35 @@
+/* Help Panel Styles */
+.help-panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.help-content {
+    width: 80%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.help-title {
+    font-size: 24px;
+    -unity-font-style: bold;
+    margin-bottom: 15px;
+    color: rgb(51, 51, 51);
+}
+
+.help-instructions {
+    margin-bottom: 20px;
+}
+
+.instruction-text {
+    font-size: 16px;
+    margin: 8px 0;
+    color: rgb(85, 85, 85);
+}

@@ -1,0 +1,24 @@
+{
+    "name": "PrintablesAR",
+    "rootNamespace": "",
+    "references": [
+        "GUID:250e096504da3aa4f851a4df12262950",
+        "GUID:6d8dd3df2b71d1346a5b1b17cb4de4ed",
+        "GUID:92703082f92b41ba80f0d6912de66115",
+        "GUID:a9420e37d7990b54abdef6688edbe313",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:9b7ce3d640f39a041a869094036c2d6a",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:09dcc9c0126b6b34ab2a877b8f2277f5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
