@@ -1,23 +1,18 @@
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToolBuddy.PrintableAR.ModelImporting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintableAR.ARInteraction
 {
-    //todo rename
-    public class ARObjectSpawner : TouchMonoBehaviour
+    public class ARInteractableInstantiator : TouchMonoBehaviour
     {
         private void Awake()
         {
             _modelImporter = FindFirstObjectByType<ModelImporter>();
-            _arRaycastManager = FindFirstObjectByType<ARRaycastManager>();
         }
 
         protected override void OnEnable()
@@ -37,11 +32,6 @@ namespace ToolBuddy.PrintableAR
 
         #region Touch processing
 
-        private ARRaycastManager _arRaycastManager;
-
-        //todo rename to hits cache?
-        private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
-
         protected override void ProcessFingerDown(
             Finger finger)
         {
@@ -56,19 +46,13 @@ namespace ToolBuddy.PrintableAR
                 "Loaded model is null, cannot spawn object."
             );
 
-            if (_arRaycastManager.Raycast(
-                    finger.screenPosition,
-                    _hits,
-                    TrackableType.PlaneWithinPolygon
-                ))
+            bool placementSucceeded = TransformManipulator.TryPlace(
+                finger,
+                _importedModel.transform
+            );
 
-            {
-                ARObjectManipulator.PlaceObjectAtHit(
-                    _importedModel.transform,
-                    _hits[0].pose
-                );
+            if (placementSucceeded)
                 _importedModel.gameObject.SetActive(true);
-            }
         }
 
         protected override void ProcessFingerMove(
@@ -104,7 +88,7 @@ namespace ToolBuddy.PrintableAR
 
             SetupMaterial(_importedModel);
             _importedModel.gameObject.SetActive(false);
-            _importedModel.AddComponent<ARObjectManipulator>();
+            _importedModel.AddComponent<ARInteractable>();
         }
 
         private void SetupMaterial(
