@@ -6,7 +6,7 @@ using AsImpL;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace ToolBuddy.PrintableAR.ModelImporting.Importers
+namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
 {
     /// <summary>
     ///     Handles importing OBJ model files
@@ -24,7 +24,8 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
         /// <inheritdoc/>
         public event Action<string, string> ImportFailed;
 
-        [NotNull] private ObjectImporter ObjectImporter => GetComponent<ObjectImporter>();
+        [NotNull]
+        private ObjectImporter ObjectImporter => GetComponent<ObjectImporter>();
 
         private void Awake()
         {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintablesAR.UI
 {
     public static class FilePicker
     {

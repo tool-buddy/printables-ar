@@ -6,7 +6,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace ToolBuddy.PrintableAR.ModelImporting
+namespace ToolBuddy.PrintablesAR.ModelImporting
 {
     /// <summary>
     /// Central model importer that delegates to specific format importers discovered via reflection.
@@ -53,9 +53,8 @@ namespace ToolBuddy.PrintableAR.ModelImporting
             }
         }
 
-        private static IEnumerable<(Type Type, ModelImporterAttribute Attribute)> GetLoaderTypes()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
+        private static IEnumerable<(Type Type, ModelImporterAttribute Attribute)> GetLoaderTypes() =>
+            AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(
                     a =>
                     {
@@ -74,7 +73,6 @@ namespace ToolBuddy.PrintableAR.ModelImporting
                     t => (Type: t, Attribute: t.GetCustomAttribute<ModelImporterAttribute>())
                 )
                 .Where(x => x.Attribute != null);
-        }
 
         [CanBeNull]
         private IModelImporter GetLoaderInstance(

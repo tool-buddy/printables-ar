@@ -1,19 +1,17 @@
 using System;
 using JetBrains.Annotations;
-using ToolBuddy.PrintableAR.ModelImporting;
+using ToolBuddy.PrintablesAR.ModelImporting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace ToolBuddy.PrintableAR.ARInteraction
+namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public class ARInteractableInstantiator : TouchMonoBehaviour
     {
-        private void Awake()
-        {
+        private void Awake() =>
             _modelImporter = FindFirstObjectByType<ModelImporter>();
-        }
 
         protected override void OnEnable()
         {

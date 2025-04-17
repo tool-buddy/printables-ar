@@ -1,4 +1,4 @@
-namespace ToolBuddy.PrintableAR.ARInteraction
+namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public partial class ARInteractibleStateMachine
     {

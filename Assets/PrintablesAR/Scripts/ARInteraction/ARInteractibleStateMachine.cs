@@ -1,9 +1,10 @@
 using Stateless;
 using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace ToolBuddy.PrintableAR.ARInteraction
+namespace ToolBuddy.PrintablesAR.ARInteraction
 {
-    public partial class ARInteractibleStateMachine : StateMachine<ARInteractibleStateMachine.TouchState, ARInteractibleStateMachine.Trigger>
+    public partial class
+        ARInteractibleStateMachine : StateMachine<ARInteractibleStateMachine.TouchState, ARInteractibleStateMachine.Trigger>
     {
         public TriggerWithParameters<Finger> FingerDownTrigger { get; }
 

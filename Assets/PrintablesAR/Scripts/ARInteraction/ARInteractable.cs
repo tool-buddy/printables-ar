@@ -4,10 +4,10 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem.EnhancedTouch;
-using static ToolBuddy.PrintableAR.ARInteraction.ARInteractibleStateMachine;
+using static ToolBuddy.PrintablesAR.ARInteraction.ARInteractibleStateMachine;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-namespace ToolBuddy.PrintableAR.ARInteraction
+namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public class ARInteractable : TouchMonoBehaviour
     {
@@ -50,10 +50,8 @@ namespace ToolBuddy.PrintableAR.ARInteraction
                 : null;
 
 
-        private void Awake()
-        {
+        private void Awake() =>
             ConfigureStateMachine();
-        }
 
         private void ConfigureStateMachine()
         {
@@ -150,13 +148,11 @@ namespace ToolBuddy.PrintableAR.ARInteraction
         #region Touch callbacks
 
         protected override void ProcessFingerDown(
-            Finger finger)
-        {
+            Finger finger) =>
             _stateMachine.FireFingerTrigger(
                 _stateMachine.FingerDownTrigger,
                 finger
             );
-        }
 
         protected override void ProcessFingerMove(
             Finger finger)
@@ -169,13 +165,11 @@ namespace ToolBuddy.PrintableAR.ARInteraction
         }
 
         protected override void ProcessFingerUp(
-            Finger finger)
-        {
+            Finger finger) =>
             _stateMachine.FireFingerTrigger(
                 _stateMachine.FingerUpTrigger,
                 finger
             );
-        }
 
         #endregion
     }

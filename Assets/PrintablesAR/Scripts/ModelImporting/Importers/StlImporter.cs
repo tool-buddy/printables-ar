@@ -7,7 +7,7 @@ using System.Threading;
 using Parabox.Stl;
 using UnityEngine;
 
-namespace ToolBuddy.PrintableAR.ModelImporting.Importers
+namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
 {
     /// <summary>
     /// Handles importing STL model files.
@@ -196,8 +196,7 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
         public override bool keepWaiting => !isDone;
 
         public WaitForBackgroundThread(
-            Action backgroundWork)
-        {
+            Action backgroundWork) =>
             ThreadPool.QueueUserWorkItem(
                 _ =>
                 {
@@ -211,6 +210,5 @@ namespace ToolBuddy.PrintableAR.ModelImporting.Importers
                     }
                 }
             );
-        }
     }
 }

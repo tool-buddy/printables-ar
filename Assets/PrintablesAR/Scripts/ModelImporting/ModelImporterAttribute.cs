@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace ToolBuddy.PrintableAR.ModelImporting
+namespace ToolBuddy.PrintablesAR.ModelImporting
 {
     [AttributeUsage(
         AttributeTargets.Class,

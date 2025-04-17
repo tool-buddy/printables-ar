@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintablesAR
 {
     public abstract class TouchMonoBehaviour : MonoBehaviour
     {

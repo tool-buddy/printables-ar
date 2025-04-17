@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ToolBuddy.PrintableAR.ModelImporting
+namespace ToolBuddy.PrintablesAR.ModelImporting
 {
     public interface IModelImporter
     {

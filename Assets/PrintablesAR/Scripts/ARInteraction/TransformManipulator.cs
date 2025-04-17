@@ -7,7 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using Object = UnityEngine.Object;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-namespace ToolBuddy.PrintableAR.ARInteraction
+namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public static class TransformManipulator
     {
