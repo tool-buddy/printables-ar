@@ -1,36 +1,22 @@
 using Stateless;
 using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintableAR.ARInteraction
 {
-    public partial class TouchStateMachine : StateMachine<TouchStateMachine.TouchState, TouchStateMachine.Trigger>
+    public partial class ARInteractibleStateMachine : StateMachine<ARInteractibleStateMachine.TouchState, ARInteractibleStateMachine.Trigger>
     {
-        //todo subdivide in multiple classes
+        public TriggerWithParameters<Finger> FingerDownTrigger { get; }
 
-        private TriggerWithParameters<Finger>
-            _fingerDownTrigger;
+        public TriggerWithParameters<Finger> FingerMoveTrigger { get; }
 
-        public TriggerWithParameters<Finger> FingerDownTrigger =>
-            _fingerDownTrigger;
-
-        private TriggerWithParameters<Finger>
-            _fingerMoveTrigger;
-
-        public TriggerWithParameters<Finger> FingerMoveTrigger =>
-            _fingerMoveTrigger;
-
-        private TriggerWithParameters<Finger>
-            _fingerUpTrigger;
-
-        public TriggerWithParameters<Finger> FingerUpTrigger =>
-            _fingerUpTrigger;
+        public TriggerWithParameters<Finger> FingerUpTrigger { get; }
 
 
-        public TouchStateMachine() : base(TouchState.Idle)
+        public ARInteractibleStateMachine() : base(TouchState.Idle)
         {
-            _fingerDownTrigger = SetTriggerParameters<Finger>(Trigger.FingerDown);
-            _fingerMoveTrigger = SetTriggerParameters<Finger>(Trigger.FingerMove);
-            _fingerUpTrigger = SetTriggerParameters<Finger>(Trigger.FingerUp);
+            FingerDownTrigger = SetTriggerParameters<Finger>(Trigger.FingerDown);
+            FingerMoveTrigger = SetTriggerParameters<Finger>(Trigger.FingerMove);
+            FingerUpTrigger = SetTriggerParameters<Finger>(Trigger.FingerUp);
 
             Configure(TouchState.Idle)
                 .PermitIf(

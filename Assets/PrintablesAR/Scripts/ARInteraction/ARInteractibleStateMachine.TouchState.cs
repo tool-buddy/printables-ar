@@ -1,10 +1,11 @@
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintableAR.ARInteraction
 {
-    public partial class TouchStateMachine
+    public partial class ARInteractibleStateMachine
     {
         public enum TouchState
         {
             Idle,
+
             /// <summary>
             /// Potential tap/drag/pinch
             /// </summary>

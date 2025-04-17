@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem.EnhancedTouch;
+using static ToolBuddy.PrintableAR.ARInteraction.ARInteractibleStateMachine;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintableAR.ARInteraction
@@ -14,7 +15,7 @@ namespace ToolBuddy.PrintableAR.ARInteraction
 
         #region State
 
-        private TouchStateMachine _stateMachine = new TouchStateMachine();
+        private ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
 
         [CanBeNull]
         private Finger _transitionTriggeringFinger;
@@ -56,10 +57,10 @@ namespace ToolBuddy.PrintableAR.ARInteraction
 
         private void ConfigureStateMachine()
         {
-            _stateMachine.Configure(TouchStateMachine.TouchState.Pinching)
+            _stateMachine.Configure(TouchState.Pinching)
                 .OnEntry(() => _prePinchScale = transform.localScale);
 
-            _stateMachine.Configure(TouchStateMachine.TouchState.Dragging)
+            _stateMachine.Configure(TouchState.Dragging)
                 .OnEntry(() => _preDragRotation = transform.rotation);
 
             _stateMachine.OnTransitioned(
@@ -92,7 +93,7 @@ namespace ToolBuddy.PrintableAR.ARInteraction
         {
             switch (_stateMachine.State)
             {
-                case TouchStateMachine.TouchState.Placing:
+                case TouchState.Placing:
 
                     Assert.IsTrue(
                         _transitionTriggeringFinger != null,
@@ -109,7 +110,7 @@ namespace ToolBuddy.PrintableAR.ARInteraction
                     );
 
                     break;
-                case TouchStateMachine.TouchState.Dragging:
+                case TouchState.Dragging:
                     Assert.IsTrue(
                         FirstTouch != null,
                         nameof(FirstTouch) + " != null"
@@ -121,7 +122,7 @@ namespace ToolBuddy.PrintableAR.ARInteraction
                         RotationSensitivity
                     );
                     break;
-                case TouchStateMachine.TouchState.Pinching:
+                case TouchState.Pinching:
                     Assert.IsTrue(
                         FirstTouch != null,
                         nameof(FirstTouch) + " != null"
@@ -138,8 +139,8 @@ namespace ToolBuddy.PrintableAR.ARInteraction
                         ScaleSensitivity
                     );
                     break;
-                case TouchStateMachine.TouchState.Idle:
-                case TouchStateMachine.TouchState.UnknownInteraction:
+                case TouchState.Idle:
+                case TouchState.UnknownInteraction:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

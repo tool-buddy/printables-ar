@@ -1,6 +1,6 @@
-namespace ToolBuddy.PrintableAR
+namespace ToolBuddy.PrintableAR.ARInteraction
 {
-    public partial class TouchStateMachine
+    public partial class ARInteractibleStateMachine
     {
         public enum Trigger
         {
