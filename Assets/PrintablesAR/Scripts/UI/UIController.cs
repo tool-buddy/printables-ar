@@ -84,34 +84,59 @@ namespace ToolBuddy.PrintablesAR.UI
 
         #region Event Listeners
 
+        private const int TransitionDuration = 100;
+
         private void SetErrorMessage(
             string errorMessage) =>
             _mainUI.ErrorMessageLabel.text = errorMessage;
 
         private void ShowNoModelLoaded() =>
-            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.Flex;
+            _mainUI.ShowLayer(
+                _mainUI.MissingModelUnderlay,
+                TransitionDuration
+            );
 
         private void HideNoModelLoaded() =>
-            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.None;
+            _mainUI.HideLayer(
+                _mainUI.MissingModelUnderlay,
+                TransitionDuration
+            );
 
         private void ShowLoading() =>
-            _mainUI.LoadingOverlay.style.display = DisplayStyle.Flex;
+            _mainUI.ShowLayer(
+                _mainUI.LoadingOverlay,
+                TransitionDuration
+            );
 
         private void HideLoading() =>
-            _mainUI.LoadingOverlay.style.display = DisplayStyle.None;
+            _mainUI.HideLayer(
+                _mainUI.LoadingOverlay,
+                TransitionDuration
+            );
 
         private void ShowError() =>
-            _mainUI.ErrorOverlay.style.display = DisplayStyle.Flex;
+            _mainUI.ShowLayer(
+                _mainUI.ErrorOverlay,
+                TransitionDuration
+            );
 
         private void HideError() =>
-            _mainUI.ErrorOverlay.style.display = DisplayStyle.None;
+            _mainUI.HideLayer(
+                _mainUI.ErrorOverlay,
+                TransitionDuration
+            );
 
         private void ShowHelp() =>
-            _mainUI.HelpOverlay.style.display = DisplayStyle.Flex;
+            _mainUI.ShowLayer(
+                _mainUI.HelpOverlay,
+                TransitionDuration
+            );
 
         private void HideHelp() =>
-            //todo handle the go back button in the mobile interface
-            _mainUI.HelpOverlay.style.display = DisplayStyle.None;
+            _mainUI.HideLayer(
+                _mainUI.HelpOverlay,
+                TransitionDuration
+            );
 
         #endregion
     }
