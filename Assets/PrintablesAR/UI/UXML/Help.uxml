@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Help.uss?fileID=7433441132597879392&amp;guid=a82893a87ab884f4c99f01749a10c783&amp;type=3#Help" />
+    <ui:VisualElement name="help-content" class="help-content">
+        <ui:Label text="Model Controls" name="help-title" class="help-title" />
+        <ui:VisualElement name="help-instructions" class="help-instructions">
+            <ui:Label text="• Rotate: Drag with one finger" class="instruction-text" />
+            <ui:Label text="• Scale: Pinch with two fingers" class="instruction-text" />
+            <ui:Label text="• Move: Tap on surface to place" class="instruction-text" />
+        </ui:VisualElement>
+        <ui:Button name="close-help-button" class="close-button">
+            <ui:Label text="Close" name="close-text" class="button-text" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

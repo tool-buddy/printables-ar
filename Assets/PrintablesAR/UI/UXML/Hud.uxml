@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
+    <ui:VisualElement name="button-container" style="flex-grow: 1; flex-direction: column; margin-right: 20px; justify-content: flex-end; align-items: flex-end; margin-bottom: 20px;">
+        <ui:Button name="load-button" class="app-button">
+            <ui:Label text="Load" name="button-text" class="button-text" />
+            <ui:VisualElement name="cube-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/cube-icon.png?fileID=2800000&amp;guid=d4116cb703d41ff43a554e5c7a9210e8&amp;type=3#cube-icon&quot;);" />
+        </ui:Button>
+        <ui:Button name="help-button" class="app-button">
+            <ui:Label text="Help" name="button-text" class="button-text" />
+            <ui:VisualElement name="help-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/help-icon.png?fileID=2800000&amp;guid=14cabf11b53b2744cb9933380bf9fb4e&amp;type=3#help-icon&quot;);" />
+        </ui:Button>
+        <ui:Button name="creator-button" class="app-button">
+            <ui:Label text="ToolBuddy" name="button-text" class="button-text" />
+            <ui:VisualElement name="globe-icon" class="button-icon" style="background-image: url(&quot;project://database/Assets/PrintablesAR/UI/Images/toolbuddy.png?fileID=2800000&amp;guid=58aa1d482420edd4caf783023d6ed7ce&amp;type=3#toolbuddy&quot;);" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

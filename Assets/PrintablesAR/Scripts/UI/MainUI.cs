@@ -16,10 +16,10 @@ namespace ToolBuddy.PrintablesAR.UI
         public VisualElement RootElement { get; private set; }
 
         [NotNull]
-        public VisualElement BaseUi { get; private set; }
+        public VisualElement Hud { get; private set; }
 
         [NotNull]
-        public VisualElement NoModelUnderlay { get; private set; }
+        public VisualElement MissingModelUnderlay { get; private set; }
 
         [NotNull]
         public VisualElement LoadingOverlay { get; private set; }
@@ -81,8 +81,8 @@ namespace ToolBuddy.PrintablesAR.UI
         private void RetrieveUIElements()
         {
             RootElement = MandatoryQ<VisualElement>("root");
-            BaseUi = MandatoryQ<VisualElement>("base-ui");
-            NoModelUnderlay = MandatoryQ<VisualElement>("no-model-underlay");
+            Hud = MandatoryQ<VisualElement>("hud");
+            MissingModelUnderlay = MandatoryQ<VisualElement>("missing-model-underlay");
             LoadingOverlay = MandatoryQ<VisualElement>("loading-overlay");
             ErrorOverlay = MandatoryQ<VisualElement>("error-overlay");
             ErrorMessageLabel = MandatoryQ<Label>("error-message");

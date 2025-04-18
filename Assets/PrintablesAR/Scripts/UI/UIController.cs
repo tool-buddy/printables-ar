@@ -31,8 +31,8 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void SetInitialVisibility()
         {
-            _mainUI.BaseUi.style.display = DisplayStyle.Flex;
-            _mainUI.NoModelUnderlay.style.display = DisplayStyle.None;
+            _mainUI.Hud.style.display = DisplayStyle.Flex;
+            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.None;
             _mainUI.LoadingOverlay.style.display = DisplayStyle.None;
             _mainUI.ErrorOverlay.style.display = DisplayStyle.None;
             _mainUI.HelpOverlay.style.display = DisplayStyle.None;
@@ -46,8 +46,8 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             _mainUI.DocumentRoot.pickingMode = PickingMode.Ignore;
             _mainUI.RootElement.pickingMode = PickingMode.Ignore;
-            _mainUI.BaseUi.pickingMode = PickingMode.Ignore;
-            _mainUI.NoModelUnderlay.pickingMode = PickingMode.Ignore;
+            _mainUI.Hud.pickingMode = PickingMode.Ignore;
+            _mainUI.MissingModelUnderlay.pickingMode = PickingMode.Ignore;
             _mainUI.ButtonContainer.pickingMode = PickingMode.Ignore;
         }
 
@@ -89,10 +89,10 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI.ErrorMessageLabel.text = errorMessage;
 
         private void ShowNoModelLoaded() =>
-            _mainUI.NoModelUnderlay.style.display = DisplayStyle.Flex;
+            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.Flex;
 
         private void HideNoModelLoaded() =>
-            _mainUI.NoModelUnderlay.style.display = DisplayStyle.None;
+            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.None;
 
         private void ShowLoading() =>
             _mainUI.LoadingOverlay.style.display = DisplayStyle.Flex;
