@@ -12,46 +12,34 @@ namespace ToolBuddy.PrintablesAR.UI
     /// </summary>
     public class MainUI
     {
-        [NotNull]
         public VisualElement DocumentRoot { get; private set; }
 
-        [NotNull]
         public VisualElement RootElement { get; private set; }
 
-        [NotNull]
         public VisualElement Hud { get; private set; }
 
-        [NotNull]
         public VisualElement MissingModelUnderlay { get; private set; }
 
-        [NotNull]
         public VisualElement LoadingOverlay { get; private set; }
 
-        [NotNull]
         public VisualElement ErrorOverlay { get; private set; }
 
-        [NotNull]
         public VisualElement HelpOverlay { get; private set; }
 
-        [NotNull]
         public Label ErrorMessageLabel { get; private set; }
 
-        [NotNull]
+        public VisualElement LoadingSpinner { get; private set; }
+
         public VisualElement ButtonContainer { get; private set; }
 
-        [NotNull]
         private Button LoadButton { get; set; }
 
-        [NotNull]
         private Button HelpButton { get; set; }
 
-        [NotNull]
         private Button CreatorButton { get; set; }
 
-        [NotNull]
         private Button CloseErrorButton { get; set; }
 
-        [NotNull]
         private Button CloseHelpButton { get; set; }
 
         public event Action LoadButtonClicked;
@@ -141,6 +129,11 @@ namespace ToolBuddy.PrintablesAR.UI
             ErrorMessageLabel = MandatoryQ<Label>(
                 ErrorOverlay,
                 "error-message"
+            );
+
+            LoadingSpinner = MandatoryQ<VisualElement>(
+                                LoadingOverlay,
+                "loading-spinner"
             );
         }
 

@@ -7,7 +7,6 @@ namespace ToolBuddy.PrintablesAR.UI
     public class UIController
     {
         private readonly ApplicationStateMachine _stateMachine;
-
         private readonly MainUI _mainUI;
 
         public UIController(
@@ -102,11 +101,34 @@ namespace ToolBuddy.PrintablesAR.UI
                 TransitionDuration
             );
 
-        private void ShowLoading() =>
+        private void ShowLoading()
+        {
             _mainUI.ShowLayer(
                 _mainUI.LoadingOverlay,
                 TransitionDuration
             );
+
+            StartLoadingSpinnerRotation();
+        }
+
+        private void StartLoadingSpinnerRotation()
+        {
+            VisualElement spinner = _mainUI.LoadingSpinner;
+            IVisualElementScheduledItem spinnerRotationScheduledItem = spinner.schedule.Execute(
+                timeState =>
+                {
+                    float oldAngle = spinner.style.rotate.value.angle.ToDegrees();
+                    float angleIncrement = 360 * (timeState.deltaTime / 1000f);
+                    spinner.style.rotate = new Rotate(
+                        new Angle(
+                            (oldAngle + angleIncrement) % 360,
+                            AngleUnit.Degree
+                        )
+                    );
+                }
+            );
+            spinnerRotationScheduledItem.Until(() => _stateMachine.State != ApplicationState.ModelLoading);
+        }
 
         private void HideLoading() =>
             _mainUI.HideLayer(
