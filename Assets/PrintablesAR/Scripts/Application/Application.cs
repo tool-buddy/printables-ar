@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using JetBrains.Annotations;
+using ToolBuddy.PrintablesAR.ARInteraction;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using ToolBuddy.PrintablesAR.UI;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
@@ -24,10 +26,18 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private ModelImporter _modelImporter;
 
+        private ARInteractableInstantiator _interactableInstantiator;
+
 
         private void Awake()
         {
+            if (!EnhancedTouchSupport.enabled) EnhancedTouchSupport.Enable();
+
             _modelImporter = FindFirstObjectByType<ModelImporter>();
+            _interactableInstantiator = new ARInteractableInstantiator(
+                _modelImporter,
+                _stateMachine
+            );
             _mainUI.Initialize(FindFirstObjectByType<UIDocument>());
             _uiController = new UIController(
                 _stateMachine,
@@ -57,6 +67,11 @@ namespace ToolBuddy.PrintablesAR.Application
 
             _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
             _modelImporter.ImportFailed -= OnModelImportFailed;
+        }
+
+        private void OnDestroy()
+        {
+            _interactableInstantiator.Dispose();
         }
 
 

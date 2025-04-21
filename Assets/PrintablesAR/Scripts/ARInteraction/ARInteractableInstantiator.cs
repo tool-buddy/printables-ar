@@ -1,64 +1,86 @@
 using System;
 using JetBrains.Annotations;
+using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Object = UnityEngine.Object;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
-    public class ARInteractableInstantiator : TouchMonoBehaviour
+    public class ARInteractableInstantiator : IDisposable
     {
-        private void Awake() =>
-            _modelImporter = FindFirstObjectByType<ModelImporter>();
+        [CanBeNull]
+        private GameObject _currentInstance;
 
-        protected override void OnEnable()
+        [NotNull]
+        private readonly ModelImporter _modelImporter;
+
+
+        private static Lazy<Material> DefaultMaterial =>
+            new Lazy<Material>(Resources.Load<Material>("Grid"));
+
+        public ARInteractableInstantiator(
+            [NotNull] ModelImporter modelImporter,
+            [NotNull] ApplicationStateMachine stateMachine)
         {
-            base.OnEnable();
+            stateMachine.Configure(ApplicationStateMachine.ApplicationState.ModelPlacement)
+                .OnEntry(Enable)
+                .OnExit(Disable);
+
+            //todo thorough test, and check model's visibility while loading, once you have replaced the current obj loader
+
+            _modelImporter = modelImporter;
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
         }
 
-        protected override void OnDisable()
+        public void Dispose()
         {
-            base.OnDisable();
-
+            Disable();
             _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
             _modelImporter.ImportFailed -= OnModelImportFailed;
+            DeleteInstance();
         }
+
+
+        private void Enable() =>
+            Touch.onFingerDown += ProcessFingerDown;
+
+
+        private void Disable() =>
+            Touch.onFingerDown -= ProcessFingerDown;
+
 
         #region Touch processing
 
-        protected override void ProcessFingerDown(
+        private void ProcessFingerDown(
             Finger finger)
         {
-            bool isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
-
-            if (IsModelSpawned || isPointerOverUI)
-                return;
-
             //todo better error handling
             Assert.IsNotNull(
-                _importedModel,
+                _currentInstance,
                 "Loaded model is null, cannot spawn object."
             );
 
+            bool isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
+            bool isInstancePlaced = _currentInstance.activeSelf;
+
+            if (isInstancePlaced || isPointerOverUI)
+                return;
+
             bool placementSucceeded = TransformManipulator.TryPlace(
                 finger,
-                _importedModel.transform,
+                _currentInstance.transform,
                 Camera.main.transform.position
             );
 
             if (placementSucceeded)
-                _importedModel.gameObject.SetActive(true);
+                _currentInstance.gameObject.SetActive(true);
         }
-
-        protected override void ProcessFingerMove(
-            Finger finger) { }
-
-        protected override void ProcessFingerUp(
-            Finger finger) { }
 
         #endregion
 
@@ -67,30 +89,38 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         //todo move to another file
 
-        [CanBeNull]
-        private GameObject _importedModel;
+        private void OnModelImportFailed(
+            string errorMessage,
+            string filePath) =>
+            DeleteInstance();
 
-        private ModelImporter _modelImporter;
-
-        private bool IsModelSpawned => _importedModel && _importedModel.activeSelf;
-
-        private static Lazy<Material> DefaultMaterial =>
-            new Lazy<Material>(Resources.Load<Material>("Grid"));
-
-        private void OnModelImportSucceeded(
-            [NotNull] GameObject loadedObj,
-            string filePath)
+        private void DeleteInstance()
         {
-            //todo delete previous instance
+            if (_currentInstance == null)
+                return;
 
-            _importedModel = loadedObj;
-
-            SetupMaterial(_importedModel);
-            _importedModel.gameObject.SetActive(false);
-            _importedModel.AddComponent<ARInteractable>();
+            Object.Destroy(_currentInstance);
+            _currentInstance = null;
         }
 
-        private void SetupMaterial(
+        private void OnModelImportSucceeded(
+            [NotNull] GameObject loadedModel,
+            string filePath)
+        {
+            DeleteInstance();
+            SetUpInstance(loadedModel);
+        }
+
+        private void SetUpInstance(
+            GameObject loadedObj)
+        {
+            _currentInstance = loadedObj;
+            SetupMaterial(_currentInstance);
+            _currentInstance.gameObject.SetActive(false);
+            _currentInstance.AddComponent<ARInteractable>();
+        }
+
+        private static void SetupMaterial(
             GameObject @object)
         {
             MeshRenderer meshRenderer = @object.GetComponent<MeshRenderer>();
@@ -99,11 +129,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 materials[i] = DefaultMaterial.Value;
             meshRenderer.sharedMaterials = materials;
         }
-
-        private void OnModelImportFailed(
-            string errorMessage,
-            string filePath) =>
-            _importedModel = null;
 
         #endregion
     }

@@ -9,14 +9,15 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
-    public class ARInteractable : TouchMonoBehaviour
+    public class ARInteractable : MonoBehaviour
     {
-
         #region State
 
         private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
+
         [CanBeNull]
         private Finger _transitionTriggeringFinger;
+
         private Quaternion _preDragRotation;
         private Vector3 _prePinchScale;
 
@@ -34,40 +35,16 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 : null;
 
 
+        #region Unity callbacks
+
         private void Awake() =>
             ConfigureStateMachine();
 
-        private void ConfigureStateMachine()
-        {
-            _stateMachine.Configure(TouchState.Pinching)
-                .OnEntry(() => _prePinchScale = transform.localScale);
+        protected virtual void OnEnable() =>
+            SubscribeToTouchEvents();
 
-            _stateMachine.Configure(TouchState.Dragging)
-                .OnEntry(() => _preDragRotation = transform.rotation);
-
-            _stateMachine.OnTransitioned(
-                t =>
-                {
-                    _transitionTriggeringFinger = t.Parameters.Length > 0
-                        ? t.Parameters[0] as Finger
-                        : null;
-                }
-            );
-        }
-
-        private bool HasMovedBeyondThreshold()
-        {
-            Assert.IsTrue(
-                FirstTouch != null,
-                nameof(FirstTouch) + " != null"
-            );
-
-            return Vector2.Distance(
-                       FirstTouch.Value.screenPosition,
-                       FirstTouch.Value.startScreenPosition
-                   )
-                   > 10;
-        }
+        protected virtual void OnDisable() =>
+            UnsubscribeToTouchEvents();
 
         private void Update()
         {
@@ -127,16 +104,68 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             }
         }
 
+        #endregion
+
+        #region StateMachine callbacks
+
+        private void ConfigureStateMachine()
+        {
+            _stateMachine.Configure(TouchState.Pinching)
+                .OnEntry(() => _prePinchScale = transform.localScale);
+
+            _stateMachine.Configure(TouchState.Dragging)
+                .OnEntry(() => _preDragRotation = transform.rotation);
+
+            _stateMachine.OnTransitioned(
+                t =>
+                {
+                    _transitionTriggeringFinger = t.Parameters.Length > 0
+                        ? t.Parameters[0] as Finger
+                        : null;
+                }
+            );
+        }
+
+        private bool HasMovedBeyondThreshold()
+        {
+            Assert.IsTrue(
+                FirstTouch != null,
+                nameof(FirstTouch) + " != null"
+            );
+
+            return Vector2.Distance(
+                       FirstTouch.Value.screenPosition,
+                       FirstTouch.Value.startScreenPosition
+                   )
+                   > 10;
+        }
+
+        #endregion
+
         #region Touch callbacks
 
-        protected override void ProcessFingerDown(
+        private void SubscribeToTouchEvents()
+        {
+            Touch.onFingerDown += ProcessFingerDown;
+            Touch.onFingerMove += ProcessFingerMove;
+            Touch.onFingerUp += ProcessFingerUp;
+        }
+
+        private void UnsubscribeToTouchEvents()
+        {
+            Touch.onFingerDown -= ProcessFingerDown;
+            Touch.onFingerMove -= ProcessFingerMove;
+            Touch.onFingerUp -= ProcessFingerUp;
+        }
+
+        private void ProcessFingerDown(
             Finger finger) =>
             _stateMachine.FireFingerTrigger(
                 _stateMachine.FingerDownTrigger,
                 finger
             );
 
-        protected override void ProcessFingerMove(
+        private void ProcessFingerMove(
             Finger finger)
         {
             if (HasMovedBeyondThreshold())
@@ -146,7 +175,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 );
         }
 
-        protected override void ProcessFingerUp(
+        private void ProcessFingerUp(
             Finger finger) =>
             _stateMachine.FireFingerTrigger(
                 _stateMachine.FingerUpTrigger,
