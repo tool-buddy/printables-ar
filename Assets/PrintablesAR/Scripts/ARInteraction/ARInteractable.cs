@@ -67,8 +67,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     _transitionTriggeringFinger = t.Parameters.Length > 0
                         ? t.Parameters[0] as Finger
                         : null;
-
-                    Debug.LogWarning($"Transitioned from {t.Source} to {t.Destination}");
                 }
             );
         }

@@ -1,34 +1,45 @@
-using Stateless;
+using System.Linq;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public partial class
-        ARInteractibleStateMachine : StateMachine<ARInteractibleStateMachine.TouchState, ARInteractibleStateMachine.Trigger>
+        ARInteractibleStateMachine : StateMachineBase<ARInteractibleStateMachine.TouchState, ARInteractibleStateMachine.Trigger>
     {
-        public TriggerWithParameters<Finger> FingerDownTrigger { get; }
+        public TriggerWithParameters<Finger> FingerDownTrigger { get; private set; }
 
-        public TriggerWithParameters<Finger> FingerMoveTrigger { get; }
+        public TriggerWithParameters<Finger> FingerMoveTrigger { get; private set; }
 
-        public TriggerWithParameters<Finger> FingerUpTrigger { get; }
+        public TriggerWithParameters<Finger> FingerUpTrigger { get; private set; }
+
+        private int ActiveInProgressFingerCount =>
+            Touch.activeFingers.Count(f => f.currentTouch.inProgress);
 
 
-        public ARInteractibleStateMachine() : base(TouchState.Idle)
+        public ARInteractibleStateMachine() : base(TouchState.Idle) { }
+
+        protected override void SetTriggerParameters()
         {
             FingerDownTrigger = SetTriggerParameters<Finger>(Trigger.FingerDown);
             FingerMoveTrigger = SetTriggerParameters<Finger>(Trigger.FingerMove);
             FingerUpTrigger = SetTriggerParameters<Finger>(Trigger.FingerUp);
+        }
+
+        protected override void Configure()
+        {
+            base.Configure();
 
             Configure(TouchState.Idle)
                 .PermitIf(
                     Trigger.FingerDown,
                     TouchState.UnknownInteraction,
-                    () => Touch.activeFingers.Count == 1
+                    () => ActiveInProgressFingerCount == 1
                 )
                 .PermitIf(
                     Trigger.FingerDown,
                     TouchState.Pinching,
-                    () => Touch.activeFingers.Count == 2
+                    () => ActiveInProgressFingerCount == 2
                 );
 
             Configure(TouchState.UnknownInteraction)
@@ -43,7 +54,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 .PermitIf(
                     Trigger.FingerDown,
                     TouchState.Pinching,
-                    () => Touch.activeFingers.Count == 2
+                    () => ActiveInProgressFingerCount == 2
                 );
 
             Configure(TouchState.Placing)
@@ -60,19 +71,24 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 .PermitIf(
                     Trigger.FingerUp,
                     TouchState.Idle,
-                    () => Touch.activeFingers.Count == 0
+                    () => ActiveInProgressFingerCount == 0
+                )
+                .PermitIf(
+                    Trigger.FingerDown,
+                    TouchState.Pinching,
+                    () => ActiveInProgressFingerCount == 2
                 );
 
             Configure(TouchState.Pinching)
                 .PermitIf(
                     Trigger.FingerUp,
                     TouchState.Idle,
-                    () => Touch.activeFingers.Count == 0
+                    () => ActiveInProgressFingerCount == 0
                 )
                 .PermitIf(
                     Trigger.FingerUp,
                     TouchState.Dragging,
-                    () => Touch.activeFingers.Count == 1
+                    () => ActiveInProgressFingerCount == 1
                 );
         }
 

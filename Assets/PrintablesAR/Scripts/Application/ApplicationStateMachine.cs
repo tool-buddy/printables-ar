@@ -1,27 +1,22 @@
-using Stateless;
-
 namespace ToolBuddy.PrintablesAR.Application
 {
     /// <summary>
-    /// State machine that manages UI screen transitions and visibility
+    /// State machine that manages the lifecycle of the application.
     /// </summary>
     public partial class
-        ApplicationStateMachine : StateMachine<ApplicationStateMachine.ApplicationState, ApplicationStateMachine.Trigger>
+        ApplicationStateMachine : StateMachineBase<ApplicationStateMachine.ApplicationState, ApplicationStateMachine.Trigger>
     {
-        public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; }
+        public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; private set; }
 
-        public ApplicationStateMachine() : base(ApplicationState.Initialization)
-        {
+        public ApplicationStateMachine() : base(ApplicationState.Initialization) { }
+
+        protected override void SetTriggerParameters() =>
             ModelLoadingErrorTrigger = SetTriggerParameters<string>(Trigger.ModelLoadingError);
-            ConfigureStateMachine();
-        }
 
-
-        /// <summary>
-        /// Initialize the state machine with states and transitions
-        /// </summary>
-        private void ConfigureStateMachine()
+        protected override void Configure()
         {
+            base.Configure();
+
             //todo handle model loading cancellation
             Configure(ApplicationState.Initialization)
                 .Permit(
