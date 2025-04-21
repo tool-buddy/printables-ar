@@ -122,7 +122,6 @@ namespace ToolBuddy.PrintablesAR.Application
         private void OnModelImportFailed(
             string errorMessage,
             string filePath) =>
-            //todo test this
             _stateMachine.Fire(
                 _stateMachine.ModelLoadingErrorTrigger,
                 String.Format(
@@ -132,7 +131,6 @@ namespace ToolBuddy.PrintablesAR.Application
                 )
             );
 
-        //todo improve error window
         /// <summary>
         /// Handles successful model import.
         /// </summary>

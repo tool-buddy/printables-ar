@@ -11,26 +11,17 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public class ARInteractable : TouchMonoBehaviour
     {
-        //TODO Refactor state and settings, maybe even remove settings once you found good values
 
         #region State
 
-        private ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
-
+        private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
         [CanBeNull]
         private Finger _transitionTriggeringFinger;
-
         private Quaternion _preDragRotation;
         private Vector3 _prePinchScale;
 
         #endregion
 
-        #region Settings
-
-        [Tooltip("How many pixels a finger must move before a drag gesture is recognized (instead of a tap).")]
-        public float TapMoveThreshold = 15.0f;
-
-        #endregion
 
         private static Touch? FirstTouch =>
             Touch.activeTouches.Count > 0

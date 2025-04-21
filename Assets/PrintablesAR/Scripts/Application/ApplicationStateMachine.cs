@@ -30,7 +30,6 @@ namespace ToolBuddy.PrintablesAR.Application
                     ApplicationState.ModelLoading
                 );
 
-            //todo handle animation
             Configure(ApplicationState.ModelLoading)
                 .Permit(
                     Trigger.ModelLoadingSuccess,

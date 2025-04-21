@@ -63,7 +63,6 @@ namespace ToolBuddy.PrintablesAR.UI
                 .OnExit(HideNoModelLoaded)
                 ;
 
-            //todo handle animation
             _stateMachine.Configure(ApplicationState.ModelLoading)
                 .OnEntry(ShowLoading)
                 .OnExit(HideLoading)
