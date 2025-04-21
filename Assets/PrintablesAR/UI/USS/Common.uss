@@ -21,10 +21,6 @@
     align-items: center;
 }
 
-.app-button:hover {
-    background-color: rgb(240, 240, 240);
-}
-
 .overlay-panel {
     position: absolute;
     width: 100%;
@@ -56,15 +52,14 @@
     align-items: center;
 }
 
-.close-button {
-    align-self: center;
-    padding: 8px 20px;
-    border-radius: 20px;
-    background-color: rgb(240, 240, 240);
-    margin-top: 15px;
-}
-
 .wrappable-text {
     text-overflow: clip;
     white-space: normal;
+}
+
+.unity-button:hover {
+    scale: 1.1 1.1;
+    transition-duration: 0.1s;
+    transition-property: all;
+    transition-timing-function: ease-out-cubic;
 }

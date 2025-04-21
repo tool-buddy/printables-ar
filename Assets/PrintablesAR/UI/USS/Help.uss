@@ -22,3 +22,15 @@
     margin: 8px 0;
     color: rgb(85, 85, 85);
 }
+
+.close-button {
+    align-self: center;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background-color: rgb(240, 240, 240);
+    margin-top: 15px;
+    border-left-color: rgb(140, 138, 138);
+    border-right-color: rgb(140, 138, 138);
+    border-top-color: rgb(140, 138, 138);
+    border-bottom-color: rgb(140, 138, 138);
+}

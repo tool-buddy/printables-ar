@@ -56,7 +56,3 @@
     color: white;
     margin-right: 0;
 }
-
-.error-button:hover {
-    background-color: rgb(200, 35, 51);
-}
