@@ -27,13 +27,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         #region Settings
 
-        [Header("Manipulation Settings")]
-        [Tooltip("How sensitive rotation is to horizontal/vertical drag.")]
-        public float RotationSensitivity = 0.4f;
-
-        [Tooltip("How sensitive scaling is to pinch gestures.")]
-        public float ScaleSensitivity = 0.005f;
-
         [Tooltip("How many pixels a finger must move before a drag gesture is recognized (instead of a tap).")]
         public float TapMoveThreshold = 15.0f;
 
@@ -82,7 +75,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                        FirstTouch.Value.screenPosition,
                        FirstTouch.Value.startScreenPosition
                    )
-                   > TapMoveThreshold;
+                   > 10;
         }
 
         private void Update()
@@ -116,7 +109,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         FirstTouch.Value,
                         transform,
                         _preDragRotation,
-                        RotationSensitivity,
+                        0.4f,
                         Camera.main.transform.position
                     );
                     break;
@@ -133,8 +126,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         FirstTouch.Value,
                         SecondTouch.Value,
                         transform,
-                        _prePinchScale,
-                        ScaleSensitivity
+                        _prePinchScale
                     );
                     break;
                 case TouchState.Idle:

@@ -53,8 +53,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Touch firstTouch,
             Touch secondTouch,
             Transform target,
-            Vector3 initialScale,
-            float scaleSensitivity)
+            Vector3 initialScale)
         {
             float currentPinchDistance = Vector2.Distance(
                 firstTouch.screenPosition,
@@ -66,7 +65,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 secondTouch.startScreenPosition
             );
 
-            target.localScale = initialScale * (currentPinchDistance / initialPinchDistance) * scaleSensitivity;
+            target.localScale = initialScale * (currentPinchDistance / initialPinchDistance);
         }
 
         public static bool TryPlace(
