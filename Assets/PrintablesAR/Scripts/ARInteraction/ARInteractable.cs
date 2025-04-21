@@ -98,7 +98,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
                     bool placementSucceeded = TransformManipulator.TryPlace(
                         _transitionTriggeringFinger,
-                        transform
+                        transform,
+                        Camera.main.transform.position
                     );
 
                     _stateMachine.FirePlacementTrigger(
@@ -115,7 +116,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         FirstTouch.Value,
                         transform,
                         _preDragRotation,
-                        RotationSensitivity
+                        RotationSensitivity,
+                        Camera.main.transform.position
                     );
                     break;
                 case TouchState.Pinching:

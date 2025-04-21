@@ -22,23 +22,31 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Touch firstTouch,
             Transform target,
             Quaternion initialRotation,
-            float rotationSensitivity)
+            float rotationSensitivity,
+            Vector3 cameraPosition)
         {
             Vector2 dragDelta = firstTouch.screenPosition - firstTouch.startScreenPosition;
 
             float yawAmount = -dragDelta.x * rotationSensitivity;
             float pitchAmount = dragDelta.y * rotationSensitivity;
 
+            Vector3 initialUp = initialRotation * Vector3.up;
+
             Quaternion yawRotation = Quaternion.AngleAxis(
                 yawAmount,
-                target.up
-            );
-            Quaternion pitchRotation = Quaternion.AngleAxis(
-                pitchAmount,
-                target.right
+                initialUp
             );
 
-            target.rotation = initialRotation * yawRotation * pitchRotation;
+            //todo better handling for objects which up is aiming towards the camera
+            Quaternion pitchRotation = Quaternion.AngleAxis(
+                pitchAmount,
+                Vector3.Cross(
+                    cameraPosition - target.position,
+                    initialUp
+                )
+            );
+
+            target.rotation = pitchRotation * yawRotation * initialRotation;
         }
 
         public static void Scale(
@@ -63,7 +71,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         public static bool TryPlace(
             Finger finger,
-            Transform target)
+            Transform target,
+            Vector3 cameraPosition)
         {
             if (!ArRaycastManager.Value.Raycast(
                     finger.screenPosition,
@@ -76,7 +85,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             target.position = hitPose.position;
             target.rotation = GetPlacementOrientation(
                 hitPose,
-                Camera.main.transform.position
+                cameraPosition
             );
 
             return true;
