@@ -22,13 +22,14 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Touch firstTouch,
             Transform target,
             Quaternion initialRotation,
-            float rotationSensitivity,
-            Vector3 cameraPosition)
+            Vector3 cameraPosition,
+            float yawSensitivity = 0.2f,
+            float pitchSensitivity = 0.09f)
         {
             Vector2 dragDelta = firstTouch.screenPosition - firstTouch.startScreenPosition;
 
-            float yawAmount = -dragDelta.x * rotationSensitivity;
-            float pitchAmount = dragDelta.y * rotationSensitivity;
+            float yawAmount = -dragDelta.x * yawSensitivity;
+            float pitchAmount = dragDelta.y * pitchSensitivity;
 
             Vector3 initialUp = initialRotation * Vector3.up;
 

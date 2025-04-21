@@ -100,7 +100,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         FirstTouch.Value,
                         transform,
                         _preDragRotation,
-                        0.4f,
                         Camera.main.transform.position
                     );
                     break;
