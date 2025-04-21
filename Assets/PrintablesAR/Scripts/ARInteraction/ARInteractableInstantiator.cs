@@ -96,6 +96,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Material[] materials = meshRenderer.sharedMaterials;
             for (int i = 0; i < materials.Length; i++)
                 materials[i] = DefaultMaterial.Value;
+            meshRenderer.sharedMaterials = materials;
         }
 
         private void OnModelImportFailed(
