@@ -13,7 +13,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
     /// </summary>
     public class ModelImporter : MonoBehaviour, IModelImporter
     {
-        private readonly Dictionary<string, IModelImporter> extensionToLoader = new();
+        private readonly Dictionary<string, IModelImporter> extensionToImporter = new();
 
         /// <inheritdoc/>
         public event Action<GameObject, string> ImportSucceeded;
@@ -24,36 +24,40 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// <summary>
         /// List of supported file extensions.
         /// </summary>
-        public IEnumerable<string> SupportedFileFormats => extensionToLoader.Keys;
+        public IEnumerable<string> SupportedFileFormats => extensionToImporter.Keys;
 
         private void Awake()
         {
-            // TODO: Cache loader discovery statically to avoid repeated reflection?
-            IEnumerable<(Type Type, ModelImporterAttribute Attribute)> loaderTypes = GetLoaderTypes();
+            IEnumerable<(Type Type, IEnumerable<ModelImporterAttribute> Attributes)> importerInfos = GetImporterInfos();
 
-            foreach ((Type Type, ModelImporterAttribute Attribute) loaderInfo in loaderTypes)
+            foreach ((Type Type, IEnumerable<ModelImporterAttribute> Attributes) importerInfo in importerInfos)
             {
-                string ext = loaderInfo.Attribute.FileExtension;
-
-                if (extensionToLoader.ContainsKey(ext))
+                foreach (ModelImporterAttribute importerAttribute in importerInfo.Attributes)
                 {
-                    Debug.LogWarning($"Duplicate model loader for extension '{ext}' ignored: {loaderInfo.Type.FullName}");
-                    continue;
+                    string ext = importerAttribute.FileExtension;
+
+                    if (extensionToImporter.ContainsKey(ext))
+                    {
+                        Debug.LogWarning($"Duplicate model importer for extension '{ext}' ignored: {importerInfo.Type.FullName}");
+                        continue;
+                    }
+
+                    IModelImporter importerInstance = GetImporterInstance(
+                        importerInfo.Type
+                    );
+
+                    if (importerInstance == null)
+                    {
+                        Debug.LogWarning($"Failed to instantiate importer: {importerInfo.Type.FullName}");
+                        continue;
+                    }
+
+                    extensionToImporter[ext] = importerInstance;
                 }
-
-                IModelImporter loaderInstance = GetLoaderInstance(loaderInfo);
-
-                if (loaderInstance == null)
-                {
-                    Debug.LogWarning($"Failed to instantiate loader: {loaderInfo.Type.FullName}");
-                    continue;
-                }
-
-                extensionToLoader[ext] = loaderInstance;
             }
         }
 
-        private static IEnumerable<(Type Type, ModelImporterAttribute Attribute)> GetLoaderTypes() =>
+        private static IEnumerable<(Type Type, IEnumerable<ModelImporterAttribute> Attribute)> GetImporterInfos() =>
             AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(
                     a =>
@@ -70,27 +74,27 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
                 )
                 .Where(t => typeof(IModelImporter).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
                 .Select(
-                    t => (Type: t, Attribute: t.GetCustomAttribute<ModelImporterAttribute>())
+                    t => (Type: t, Attributes: t.GetCustomAttributes<ModelImporterAttribute>())
                 )
-                .Where(x => x.Attribute != null);
+                .Where(x => x.Attributes != null && x.Attributes.Any());
 
         [CanBeNull]
-        private IModelImporter GetLoaderInstance(
-            (Type Type, ModelImporterAttribute Attribute) loaderInfo)
+        private IModelImporter GetImporterInstance(
+            Type importerInfoType)
         {
-            IModelImporter loaderInstance;
+            IModelImporter importerInstance;
 
-            if (typeof(MonoBehaviour).IsAssignableFrom(loaderInfo.Type))
+            if (typeof(MonoBehaviour).IsAssignableFrom(importerInfoType))
             {
-                Component existing = GetComponent(loaderInfo.Type);
+                Component existing = GetComponent(importerInfoType);
                 if (existing == null)
-                    existing = gameObject.AddComponent(loaderInfo.Type);
-                loaderInstance = existing as IModelImporter;
+                    existing = gameObject.AddComponent(importerInfoType);
+                importerInstance = existing as IModelImporter;
             }
             else
-                loaderInstance = Activator.CreateInstance(loaderInfo.Type) as IModelImporter;
+                importerInstance = Activator.CreateInstance(importerInfoType) as IModelImporter;
 
-            return loaderInstance;
+            return importerInstance;
         }
 
         private void OnEnable()
@@ -99,30 +103,30 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
             //todo handle multiple loadings of same file
             //todo handle loading of invalid file (probably reset loadedMaterial and loaded mesh)
 
-            foreach (KeyValuePair<string, IModelImporter> pair in extensionToLoader)
+            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
             {
-                pair.Value.ImportSucceeded += OnImportSucceeded;
-                pair.Value.ImportFailed += OnImportFailed;
+                importer.ImportSucceeded += OnImportSucceeded;
+                importer.ImportFailed += OnImportFailed;
             }
         }
 
         private void OnDisable()
         {
-            foreach (KeyValuePair<string, IModelImporter> pair in extensionToLoader)
+            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
             {
-                pair.Value.ImportSucceeded -= OnImportSucceeded;
-                pair.Value.ImportFailed -= OnImportFailed;
+                importer.ImportSucceeded -= OnImportSucceeded;
+                importer.ImportFailed -= OnImportFailed;
             }
         }
 
         /// <inheritdoc/>
         public bool TryImport(
             string filePath) =>
-            extensionToLoader.TryGetValue(
+            extensionToImporter.TryGetValue(
                 PathToExtension(filePath),
-                out IModelImporter loader
+                out IModelImporter importer
             )
-            && loader.TryImport(filePath);
+            && importer.TryImport(filePath);
 
         private static string PathToExtension(
             string filePath) =>

@@ -5,7 +5,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
 {
     [AttributeUsage(
         AttributeTargets.Class,
-        Inherited = false
+        Inherited = false,
+        AllowMultiple = true
     )]
     public class ModelImporterAttribute : Attribute
     {
