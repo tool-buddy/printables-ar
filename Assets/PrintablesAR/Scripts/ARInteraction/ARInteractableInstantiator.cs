@@ -19,10 +19,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [NotNull]
         private readonly ModelImporter _modelImporter;
 
-
-        private static Lazy<Material> DefaultMaterial =>
-            new Lazy<Material>(Resources.Load<Material>("Grid"));
-
         public ARInteractableInstantiator(
             [NotNull] ModelImporter modelImporter,
             [NotNull] ApplicationStateMachine stateMachine)
@@ -115,19 +111,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             GameObject loadedObj)
         {
             _currentInstance = loadedObj;
-            SetupMaterial(_currentInstance);
             _currentInstance.gameObject.SetActive(false);
             _currentInstance.AddComponent<ARInteractable>();
-        }
-
-        private static void SetupMaterial(
-            GameObject @object)
-        {
-            MeshRenderer meshRenderer = @object.GetComponent<MeshRenderer>();
-            Material[] materials = meshRenderer.sharedMaterials;
-            for (int i = 0; i < materials.Length; i++)
-                materials[i] = DefaultMaterial.Value;
-            meshRenderer.sharedMaterials = materials;
         }
 
         #endregion
