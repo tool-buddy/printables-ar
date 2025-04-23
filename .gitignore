@@ -77,7 +77,6 @@ crashlytics-build.properties
 # Custom
 /.vsconfig
 /packages.config
-/ContentPackages
 /UIElementsSchema
 /Assets/PrintablesAR/Models
 /Assets/PrintablesAR/Models.meta
@@ -88,3 +87,4 @@ crashlytics-build.properties
 /Assets/Plugins/TriLib.meta
 /Assets/Plugins/TriLib
 /knowledge.md
+/Packages/com.unity.xr-content.xr-sim-environments-2.0.1.tgz
