@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 195926949}
-  - component: {fileID: 195926948}
   - component: {fileID: 195926946}
   m_Layer: 0
   m_Name: ModelImporter
@@ -149,20 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7609c5223ab914f872858d9a087d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &195926948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195926945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aa7bdf849241b242afe32648ecd25c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  importAssets: 0
-  importAssetPath: _ImportedOBJ
 --- !u!4 &195926949
 Transform:
   m_ObjectHideFlags: 0
