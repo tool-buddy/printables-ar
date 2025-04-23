@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using TriLibCore;
+using TriLibCore.Extensions;
 using UnityEngine;
 
 namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
@@ -53,6 +54,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         {
 
             AssetLoaderOptions loaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+            //to be able to get the model's bounds and center it
+            loaderOptions.ReadEnabled = true;
 
             switch (fileExtension)
             {
@@ -94,18 +97,35 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         {
             GameObject importedGameObject = assetLoaderContext.RootGameObject;
             string modelFilePath = assetLoaderContext.PersistentDataPath;
+
             //todo remove log
             Debug.Log("Materials loaded. Model fully loaded.");
+
             if (importedGameObject.GetComponentsInChildren<MeshFilter>().Any())
+            {
+                CenterModel(importedGameObject);
+
                 ImportSucceeded?.Invoke(
                     importedGameObject,
                     modelFilePath
                 );
+            }
             else
                 ImportFailed?.Invoke(
                     "File has no 3D models.",
                     modelFilePath
                 );
+        }
+
+        private static void CenterModel(
+            GameObject loadedModel)
+        {
+            Bounds loadedModelBounds = loadedModel.CalculateBounds();
+            loadedModel.transform.position = new Vector3(
+                -loadedModelBounds.center.x,
+                -loadedModelBounds.center.y + loadedModelBounds.extents.y,
+                -loadedModelBounds.center.z
+            );
         }
     }
 }

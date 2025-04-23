@@ -108,12 +108,15 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         private void SetUpInstance(
-            GameObject loadedObj)
+            GameObject loadedModel)
         {
-            _currentInstance = loadedObj;
+            _currentInstance = new GameObject($"{loadedModel.name} Model");
             _currentInstance.gameObject.SetActive(false);
             _currentInstance.AddComponent<ARInteractable>();
+            loadedModel.transform.SetParent(_currentInstance.transform);
         }
+
+        
 
         #endregion
     }
