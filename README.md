@@ -2,6 +2,9 @@
 
 An augmented reality (AR) mobile application for previewing 3D printing models in a real-world environment.
 
+## Requirements
+
+- [TriLib 2](https://assetstore.unity.com/packages/tools/modeling/trilib-2-model-loading-package-157548)
 
 ## Development Status
 
