@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using TriLibCore;
 using UnityEngine;
@@ -11,8 +12,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
     [ModelImporter("obj")]
     [ModelImporter("stl")]
     //todo add all relevant formats
-    //todo needs to be a MonoBehaviour?
-    public class TriLibImporter : MonoBehaviour, IModelImporter
+    public class TriLibImporter : IModelImporter
     {
         //todo renaming and doc
         /// <inheritdoc/>
@@ -28,7 +28,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
             LoadObjAsync(
                 filePath
             );
-
+            //todo avoid returning true?
             return true;
         }
 
@@ -45,21 +45,33 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
                 null,
                 OnError,
                 null,
-                GetLoaderOptions()
-            );
+                GetLoaderOptions(Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant())
+            );//todo handle callbacks possibly called after destroying the object
 
-        private static AssetLoaderOptions GetLoaderOptions()
+        private static AssetLoaderOptions GetLoaderOptions(
+            string fileExtension)
         {
+
             AssetLoaderOptions loaderOptions = AssetLoader.CreateDefaultLoaderOptions();
 
-            loaderOptions.MeshWorldTransform = Matrix4x4.TRS(
-                Vector3.zero,
-                Quaternion.AngleAxis(
-                    90,
-                    Vector3.left
-                ),
-                Vector3.one * 0.01f
-            );
+            switch (fileExtension)
+            {
+                case "obj":
+                    loaderOptions.MeshWorldTransform = Matrix4x4.TRS(
+                        Vector3.zero,
+                        Quaternion.AngleAxis(
+                            90,
+                            Vector3.left
+                        ),
+                        Vector3.one * 0.001f
+                    );
+                    break;
+                case "stl":
+                    loaderOptions.ScaleFactor = 0.001f;
+                    break;
+                default:
+                    break;
+            }
 
             return loaderOptions;
         }
@@ -68,6 +80,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         private void OnError(
             IContextualizedError obj)
         {
+            //todo remove log
             Debug.LogError($"An error occurred while loading your Model: {obj.GetInnerException()}");
             ImportFailed?.Invoke(
                 obj.ToString(),
@@ -81,6 +94,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         {
             GameObject importedGameObject = assetLoaderContext.RootGameObject;
             string modelFilePath = assetLoaderContext.PersistentDataPath;
+            //todo remove log
             Debug.Log("Materials loaded. Model fully loaded.");
             if (importedGameObject.GetComponentsInChildren<MeshFilter>().Any())
                 ImportSucceeded?.Invoke(
