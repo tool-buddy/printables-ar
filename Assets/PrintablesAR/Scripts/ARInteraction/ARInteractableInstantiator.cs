@@ -21,12 +21,14 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [CanBeNull]
         private GameObject _currentInstance;
 
+        public event Action<GameObject> InteractableInstantiated;
+
         public ARInteractableInstantiator(
             [NotNull] ModelImporter modelImporter,
             [NotNull] ApplicationStateMachine stateMachine,
             [NotNull] Raycaster raycaster)
         {
-            stateMachine.Configure(ApplicationStateMachine.ApplicationState.ModelPlacement)
+            stateMachine.Configure(ApplicationStateMachine.ApplicationState.ModelSpawn)
                 .OnEntry(Enable)
                 .OnExit(Disable);
 
@@ -64,13 +66,13 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             //todo better error handling
             Assert.IsNotNull(
                 _currentInstance,
-                "Loaded model is null, cannot spawn object."
+                "Loaded model is null, cannot instantiate object."
             );
 
-            bool isInstancePlaced = _currentInstance.activeSelf;
-
-            if (isInstancePlaced)
-                return;
+            Assert.IsFalse(
+                _currentInstance.activeSelf,
+                "Model already instantiated."
+            );
 
             bool placementSucceeded = TransformManipulator.TryPlace(
                 finger,
@@ -80,7 +82,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
 
             if (placementSucceeded)
+            {
                 _currentInstance.gameObject.SetActive(true);
+                InteractableInstantiated?.Invoke(_currentInstance);
+            }
         }
 
         #endregion

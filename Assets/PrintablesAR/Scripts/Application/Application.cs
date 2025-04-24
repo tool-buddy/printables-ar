@@ -46,6 +46,8 @@ namespace ToolBuddy.PrintablesAR.Application
                 )
             );
 
+            _interactableInstantiator.InteractableInstantiated += OnInteractableInstantiated;
+
             _uiController = new UIController(
                 _stateMachine,
                 _mainUI
@@ -54,6 +56,10 @@ namespace ToolBuddy.PrintablesAR.Application
 
             _stateMachine.Fire(Trigger.ApplicationInitialized);
         }
+
+        private void OnInteractableInstantiated(
+            GameObject obj) =>
+            _stateMachine.Fire(Trigger.ModelSpawned);
 
         private void OnEnable()
         {
@@ -77,8 +83,11 @@ namespace ToolBuddy.PrintablesAR.Application
             _modelImporter.ImportFailed -= OnModelImportFailed;
         }
 
-        private void OnDestroy() =>
+        private void OnDestroy()
+        {
+            _interactableInstantiator.InteractableInstantiated -= OnInteractableInstantiated;
             _interactableInstantiator.Dispose();
+        }
 
 
         /// <summary>

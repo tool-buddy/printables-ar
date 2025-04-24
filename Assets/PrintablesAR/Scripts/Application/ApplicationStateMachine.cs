@@ -33,7 +33,7 @@ namespace ToolBuddy.PrintablesAR.Application
             Configure(ApplicationState.ModelLoading)
                 .Permit(
                     Trigger.ModelLoadingSuccess,
-                    ApplicationState.ModelPlacement
+                    ApplicationState.ModelSpawn
                 )
                 .Permit(
                     Trigger.ModelLoadingError,
@@ -46,7 +46,13 @@ namespace ToolBuddy.PrintablesAR.Application
                     ApplicationState.NoModelLoaded
                 );
 
-            Configure(ApplicationState.ModelPlacement)
+            Configure(ApplicationState.ModelSpawn)
+                .Permit(
+                    Trigger.ModelSpawned,
+                    ApplicationState.ModelManipulation
+                ); 
+            
+            Configure(ApplicationState.ModelManipulation)
                 .Permit(
                     Trigger.ModelLoadingStarted,
                     ApplicationState.ModelLoading

@@ -8,7 +8,7 @@ namespace ToolBuddy.PrintablesAR.Application
             ModelLoadingStarted,
             ModelLoadingSuccess,
             ModelLoadingError,
-
+            ModelSpawned,
             //todo rename
             Reset
         }

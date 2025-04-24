@@ -8,7 +8,8 @@ namespace ToolBuddy.PrintablesAR.Application
             NoModelLoaded,
             ModelLoading,
             LoadingError,
-            ModelPlacement
+            ModelSpawn,
+            ModelManipulation
         }
     }
 }
