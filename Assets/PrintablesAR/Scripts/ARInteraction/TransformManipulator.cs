@@ -1,23 +1,13 @@
 using System;
-using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
-using Object = UnityEngine.Object;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public static class TransformManipulator
     {
-        private static Lazy<ARRaycastManager> ArRaycastManager =>
-            new Lazy<ARRaycastManager>(
-                Object.FindFirstObjectByType<ARRaycastManager>
-            );
-
-        private static readonly List<ARRaycastHit> _hits = new List<ARRaycastHit>();
-
         public static void Rotate(
             Touch firstTouch,
             Transform target,
@@ -72,22 +62,23 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         public static bool TryPlace(
             Finger finger,
             Transform target,
-            Vector3 cameraPosition)
+            Vector3 cameraPosition,
+            [NotNull] Raycaster raycaster)
         {
-            if (!ArRaycastManager.Value.Raycast(
-                    finger.screenPosition,
-                    _hits,
-                    TrackableType.PlaneWithinPolygon
+            if (raycaster == null)
+                throw new ArgumentNullException(nameof(raycaster));
+
+            if (!raycaster.TryGetHit(
+                    finger,
+                    out Pose hitPose
                 ))
                 return false;
 
-            Pose hitPose = _hits[0].pose;
             target.position = hitPose.position;
             target.rotation = GetPlacementOrientation(
                 hitPose,
                 cameraPosition
             );
-
             return true;
         }
 

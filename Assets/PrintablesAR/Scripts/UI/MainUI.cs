@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
@@ -239,6 +240,22 @@ namespace ToolBuddy.PrintablesAR.UI
                 );
                 scaleAnimation.easingCurve = Easing.OutQuad;
             }
+        }
+
+
+        public bool IsFingerOnUI(
+            Finger finger)
+        {
+            Vector2 convertedFingerPosition =
+                new Vector2(
+                    finger.screenPosition.x,
+                    Screen.height - finger.screenPosition.y
+                );
+            Vector2 testedPosition = RuntimePanelUtils.ScreenToPanel(
+                DocumentRoot.panel,
+                convertedFingerPosition
+            );
+            return DocumentRoot.panel.Pick(testedPosition) != null;
         }
     }
 }

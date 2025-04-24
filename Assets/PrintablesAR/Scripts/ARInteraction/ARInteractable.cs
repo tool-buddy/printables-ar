@@ -34,6 +34,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 ? Touch.activeTouches[1]
                 : null;
 
+		public Raycaster Raycaster { get; set; }
 
         #region Unity callbacks
 
@@ -57,10 +58,16 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         nameof(_transitionTriggeringFinger) + " != null"
                     );
 
+                    Assert.IsNotNull(
+                        Raycaster,
+                        nameof(Raycaster) + " != null"
+                    );
+
                     bool placementSucceeded = TransformManipulator.TryPlace(
                         _transitionTriggeringFinger,
                         transform,
-                        Camera.main.transform.position
+                        Camera.main.transform.position,
+                        Raycaster
                     );
 
                     _stateMachine.FirePlacementTrigger(
@@ -159,20 +166,28 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         private void ProcessFingerDown(
-            Finger finger) =>
+            Finger finger)
+        {
+            //ignore UI touches only for taps, not for snaps
+            if (finger.index == 0 && Raycaster.IsFingerOnUI(finger))
+                return;
+
             _stateMachine.FireFingerTrigger(
                 _stateMachine.FingerDownTrigger,
                 finger
             );
+        }
 
         private void ProcessFingerMove(
             Finger finger)
         {
-            if (HasMovedBeyondThreshold())
-                _stateMachine.FireFingerTrigger(
-                    _stateMachine.FingerMoveTrigger,
-                    finger
-                );
+            if (HasMovedBeyondThreshold() == false)
+                return;
+
+            _stateMachine.FireFingerTrigger(
+                _stateMachine.FingerMoveTrigger,
+                finger
+            );
         }
 
         private void ProcessFingerUp(
@@ -184,4 +199,5 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         #endregion
     }
+
 }

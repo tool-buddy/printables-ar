@@ -7,43 +7,51 @@ using ToolBuddy.PrintablesAR.UI;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
+using UnityEngine.XR.ARFoundation;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
 namespace ToolBuddy.PrintablesAR.Application
 {
     /// <summary>
-    /// Controls the UI for the 3D Printing Model Displayer
+    ///     Controls the UI for the 3D Printing Model Displayer
     /// </summary>
     public class Application : MonoBehaviour
     {
-        private readonly ApplicationStateMachine _stateMachine = new ApplicationStateMachine();
-
-
         [NotNull]
         private readonly MainUI _mainUI = new MainUI();
 
-        private UIController _uiController;
+        private readonly ApplicationStateMachine _stateMachine = new ApplicationStateMachine();
+
+        private ARInteractableInstantiator _interactableInstantiator;
 
         private ModelImporter _modelImporter;
 
-        private ARInteractableInstantiator _interactableInstantiator;
+        private UIController _uiController;
 
 
         private void Awake()
         {
+            _mainUI.Initialize(FindFirstObjectByType<UIDocument>());
+
             if (!EnhancedTouchSupport.enabled) EnhancedTouchSupport.Enable();
 
             _modelImporter = FindFirstObjectByType<ModelImporter>();
+
             _interactableInstantiator = new ARInteractableInstantiator(
                 _modelImporter,
-                _stateMachine
+                _stateMachine,
+                new Raycaster(
+                    FindFirstObjectByType<ARRaycastManager>(),
+                    _mainUI
+                )
             );
-            _mainUI.Initialize(FindFirstObjectByType<UIDocument>());
+
             _uiController = new UIController(
                 _stateMachine,
                 _mainUI
             );
             _uiController.Initialize();
+
             _stateMachine.Fire(Trigger.ApplicationInitialized);
         }
 
@@ -69,14 +77,12 @@ namespace ToolBuddy.PrintablesAR.Application
             _modelImporter.ImportFailed -= OnModelImportFailed;
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() =>
             _interactableInstantiator.Dispose();
-        }
 
 
         /// <summary>
-        /// Handles load button click
+        ///     Handles load button click
         /// </summary>
         private void OnLoadButtonClicked() =>
             FilePicker.Show(
@@ -132,7 +138,7 @@ namespace ToolBuddy.PrintablesAR.Application
         }
 
         /// <summary>
-        /// Handles model import errors.
+        ///     Handles model import errors.
         /// </summary>
         private void OnModelImportFailed(
             string errorMessage,
@@ -147,7 +153,7 @@ namespace ToolBuddy.PrintablesAR.Application
             );
 
         /// <summary>
-        /// Handles successful model import.
+        ///     Handles successful model import.
         /// </summary>
         private void OnModelImportSucceeded(
             GameObject loadedObj,
@@ -155,14 +161,14 @@ namespace ToolBuddy.PrintablesAR.Application
             _stateMachine.Fire(Trigger.ModelLoadingSuccess);
 
         /// <summary>
-        /// Closes the error overlay and returns to initial state
+        ///     Closes the error overlay and returns to initial state
         /// </summary>
         private void OnCloseErrorButtonClicked() =>
             _stateMachine.Fire(Trigger.Reset);
 
 
         /// <summary>
-        /// Opens the ToolBuddy website
+        ///     Opens the ToolBuddy website
         /// </summary>
         private void OnCreatorButtonClicked() =>
             UnityEngine.Application.OpenURL("https://toolbuddy.net");

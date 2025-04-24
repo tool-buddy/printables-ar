@@ -4,7 +4,6 @@ using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Object = UnityEngine.Object;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
@@ -13,15 +12,19 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public class ARInteractableInstantiator : IDisposable
     {
-        [CanBeNull]
-        private GameObject _currentInstance;
-
         [NotNull]
         private readonly ModelImporter _modelImporter;
 
+        [NotNull]
+        private readonly Raycaster _raycaster;
+
+        [CanBeNull]
+        private GameObject _currentInstance;
+
         public ARInteractableInstantiator(
             [NotNull] ModelImporter modelImporter,
-            [NotNull] ApplicationStateMachine stateMachine)
+            [NotNull] ApplicationStateMachine stateMachine,
+            [NotNull] Raycaster raycaster)
         {
             stateMachine.Configure(ApplicationStateMachine.ApplicationState.ModelPlacement)
                 .OnEntry(Enable)
@@ -32,6 +35,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             _modelImporter = modelImporter;
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
+
+            _raycaster = raycaster;
         }
 
         public void Dispose()
@@ -62,16 +67,16 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 "Loaded model is null, cannot spawn object."
             );
 
-            bool isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
             bool isInstancePlaced = _currentInstance.activeSelf;
 
-            if (isInstancePlaced || isPointerOverUI)
+            if (isInstancePlaced)
                 return;
 
             bool placementSucceeded = TransformManipulator.TryPlace(
                 finger,
                 _currentInstance.transform,
-                Camera.main.transform.position
+                Camera.main.transform.position,
+                _raycaster
             );
 
             if (placementSucceeded)
@@ -112,11 +117,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         {
             _currentInstance = new GameObject($"{loadedModel.name} Model");
             _currentInstance.gameObject.SetActive(false);
-            _currentInstance.AddComponent<ARInteractable>();
+            ARInteractable arInteractable = _currentInstance.AddComponent<ARInteractable>();
+            arInteractable.Raycaster = _raycaster;
             loadedModel.transform.SetParent(_currentInstance.transform);
         }
-
-        
 
         #endregion
     }
