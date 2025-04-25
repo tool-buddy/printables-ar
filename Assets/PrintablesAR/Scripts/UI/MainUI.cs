@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
