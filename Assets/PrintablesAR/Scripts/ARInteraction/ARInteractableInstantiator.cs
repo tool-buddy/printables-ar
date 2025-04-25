@@ -75,7 +75,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
 
             bool placementSucceeded = TransformManipulator.TryPlace(
-                finger,
+                finger.screenPosition,
                 _currentInstance.transform,
                 Camera.main.transform.position,
                 _raycaster

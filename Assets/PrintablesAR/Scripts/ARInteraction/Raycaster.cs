@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.UI;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -31,17 +30,17 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         public bool TryGetHit(
-            Finger finger,
+            Vector2 touchPosition,
             out Pose hitPose)
         {
-            if (_ui.IsFingerOnUI(finger))
+            if (_ui.IsFingerOnUI(touchPosition))
             {
                 hitPose = default;
                 return false;
             }
 
             if (!_arRaycastManager.Raycast(
-                    finger.screenPosition,
+                    touchPosition,
                     _hits,
                     TrackableType.PlaneWithinPolygon
                 ))
@@ -55,7 +54,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         public bool IsFingerOnUI(
-            Finger finger) =>
-            _ui.IsFingerOnUI(finger);
+            Vector2 fingerScreenPosition) =>
+            _ui.IsFingerOnUI(fingerScreenPosition);
     }
 }

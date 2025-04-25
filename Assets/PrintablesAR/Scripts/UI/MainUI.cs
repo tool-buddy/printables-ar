@@ -244,12 +244,12 @@ namespace ToolBuddy.PrintablesAR.UI
 
 
         public bool IsFingerOnUI(
-            Finger finger)
+            Vector2 touchPosition)
         {
             Vector2 convertedFingerPosition =
                 new Vector2(
-                    finger.screenPosition.x,
-                    Screen.height - finger.screenPosition.y
+                    touchPosition.x,
+                    Screen.height - touchPosition.y
                 );
             Vector2 testedPosition = RuntimePanelUtils.ScreenToPanel(
                 DocumentRoot.panel,

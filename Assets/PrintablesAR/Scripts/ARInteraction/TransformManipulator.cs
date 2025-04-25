@@ -1,25 +1,21 @@
 using System;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
     public static class TransformManipulator
     {
         public static void Rotate(
-            Touch firstTouch,
+            Vector2 touchDrag,
             Transform target,
             Quaternion initialRotation,
             Vector3 cameraPosition,
             float yawSensitivity = 0.2f,
             float pitchSensitivity = 0.09f)
         {
-            Vector2 dragDelta = firstTouch.screenPosition - firstTouch.startScreenPosition;
-
-            float yawAmount = -dragDelta.x * yawSensitivity;
-            float pitchAmount = dragDelta.y * pitchSensitivity;
+            float yawAmount = -touchDrag.x * yawSensitivity;
+            float pitchAmount = touchDrag.y * pitchSensitivity;
 
             Vector3 initialUp = initialRotation * Vector3.up;
 
@@ -41,26 +37,28 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         public static void Scale(
-            Touch firstTouch,
-            Touch secondTouch,
             Transform target,
-            Vector3 initialScale)
+            Vector3 initialScale,
+            Vector2 firstTouchPosition,
+            Vector2 secondTouchPosition,
+            Vector2 firstTouchStartPosition,
+            Vector2 secondTouchStartPosition)
         {
             float currentPinchDistance = Vector2.Distance(
-                firstTouch.screenPosition,
-                secondTouch.screenPosition
+                firstTouchPosition,
+                secondTouchPosition
             );
 
             float initialPinchDistance = Vector2.Distance(
-                firstTouch.startScreenPosition,
-                secondTouch.startScreenPosition
+                firstTouchStartPosition,
+                secondTouchStartPosition
             );
 
             target.localScale = initialScale * (currentPinchDistance / initialPinchDistance);
         }
 
         public static bool TryPlace(
-            Finger finger,
+            Vector2 touchPosition,
             Transform target,
             Vector3 cameraPosition,
             [NotNull] Raycaster raycaster)
@@ -69,7 +67,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 throw new ArgumentNullException(nameof(raycaster));
 
             if (!raycaster.TryGetHit(
-                    finger,
+                    touchPosition,
                     out Pose hitPose
                 ))
                 return false;

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Stateless;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -9,32 +11,21 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
-    public class ARInteractable : MonoBehaviour
+    public partial class ARInteractable : MonoBehaviour
     {
+        [CanBeNull]
+        public Raycaster Raycaster { get; set; }
+
         #region State
 
         private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
 
-        [CanBeNull]
-        private Finger _transitionTriggeringFinger;
-
         private Quaternion _preDragRotation;
         private Vector3 _prePinchScale;
+        private readonly TouchTransitionState _touchTransitionState = new TouchTransitionState();
 
         #endregion
 
-
-        private static Touch? FirstTouch =>
-            Touch.activeTouches.Count > 0
-                ? Touch.activeTouches.First()
-                : null;
-
-        private static Touch? SecondTouch =>
-            Touch.activeTouches.Count > 1
-                ? Touch.activeTouches[1]
-                : null;
-
-		public Raycaster Raycaster { get; set; }
 
         #region Unity callbacks
 
@@ -53,18 +44,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             {
                 case TouchState.Placing:
 
-                    Assert.IsTrue(
-                        _transitionTriggeringFinger != null,
-                        nameof(_transitionTriggeringFinger) + " != null"
-                    );
-
-                    Assert.IsNotNull(
-                        Raycaster,
-                        nameof(Raycaster) + " != null"
-                    );
-
                     bool placementSucceeded = TransformManipulator.TryPlace(
-                        _transitionTriggeringFinger,
+                        _touchTransitionState.TransitionTriggeringFingerPosition.Value,
                         transform,
                         Camera.main.transform.position,
                         Raycaster
@@ -76,31 +57,24 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
                     break;
                 case TouchState.Dragging:
-                    Assert.IsTrue(
-                        FirstTouch != null,
-                        nameof(FirstTouch) + " != null"
-                    );
+
                     TransformManipulator.Rotate(
-                        FirstTouch.Value,
+                        _touchTransitionState.FirstPressedFinger.screenPosition
+                        - _touchTransitionState.FirstPressedFingerPosition.Value,
                         transform,
                         _preDragRotation,
                         Camera.main.transform.position
                     );
                     break;
                 case TouchState.Pinching:
-                    Assert.IsTrue(
-                        FirstTouch != null,
-                        nameof(FirstTouch) + " != null"
-                    );
-                    Assert.IsTrue(
-                        SecondTouch != null,
-                        nameof(SecondTouch) + " != null"
-                    );
+
                     TransformManipulator.Scale(
-                        FirstTouch.Value,
-                        SecondTouch.Value,
                         transform,
-                        _prePinchScale
+                        _prePinchScale,
+                        _touchTransitionState.FirstPressedFinger.screenPosition,
+                        _touchTransitionState.SecondPressedFinger.screenPosition,
+                        _touchTransitionState.FirstPressedFingerPosition.Value,
+                        _touchTransitionState.SecondPressedFingerPosition.Value
                     );
                     break;
                 case TouchState.Idle:
@@ -124,25 +98,43 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 .OnEntry(() => _preDragRotation = transform.rotation);
 
             _stateMachine.OnTransitioned(
-                t =>
-                {
-                    _transitionTriggeringFinger = t.Parameters.Length > 0
-                        ? t.Parameters[0] as Finger
-                        : null;
-                }
+                t => UpdateTouchTransitionState(t)
+            );
+        }
+
+        private void UpdateTouchTransitionState(
+            StateMachine<TouchState, Trigger>.Transition transition)
+        {
+            List<Finger> firstTwoPressedFingers =
+                Touch.activeFingers.Where(f => f.isActive && f.currentTouch.inProgress).Take(2).ToList();
+            Finger firstPressedFinger = firstTwoPressedFingers.Count > 0
+                ? firstTwoPressedFingers[0]
+                : null;
+            Finger secondPressedFinger = firstTwoPressedFingers.Count > 1
+                ? firstTwoPressedFingers[1]
+                : null;
+            _touchTransitionState.Set(
+                firstPressedFinger,
+                secondPressedFinger,
+                transition.Parameters.Length > 0
+                    ? ((Finger)transition.Parameters[0]).screenPosition
+                    : null
             );
         }
 
         private bool HasMovedBeyondThreshold()
         {
+            Finger firstPressedFinger = _touchTransitionState.FirstPressedFinger;
             Assert.IsTrue(
-                FirstTouch != null,
-                nameof(FirstTouch) + " != null"
+                firstPressedFinger != null,
+                nameof(firstPressedFinger) + " != null"
             );
 
+            Touch firstTouch = firstPressedFinger.currentTouch;
+
             return Vector2.Distance(
-                       FirstTouch.Value.screenPosition,
-                       FirstTouch.Value.startScreenPosition
+                       firstTouch.screenPosition,
+                       firstTouch.startScreenPosition
                    )
                    > 10;
         }
@@ -169,7 +161,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Finger finger)
         {
             //ignore UI touches only for taps, not for snaps
-            if (finger.index == 0 && Raycaster.IsFingerOnUI(finger))
+            if (finger.index == 0
+                && Raycaster.IsFingerOnUI(
+                    finger.screenPosition
+                ))
                 return;
 
             _stateMachine.FireFingerTrigger(
@@ -199,5 +194,4 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         #endregion
     }
-
 }
