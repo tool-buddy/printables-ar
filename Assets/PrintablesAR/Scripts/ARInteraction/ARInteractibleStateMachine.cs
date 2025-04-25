@@ -33,7 +33,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Configure(TouchState.Idle)
                 .PermitIf(
                     Trigger.FingerDown,
-                    TouchState.UnknownInteraction,
+                    TouchState.DetectingInteraction,
                     () => ActiveInProgressFingerCount == 1
                 )
                 .PermitIf(
@@ -42,7 +42,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     () => ActiveInProgressFingerCount == 2
                 );
 
-            Configure(TouchState.UnknownInteraction)
+            Configure(TouchState.DetectingInteraction)
                 .Permit(
                     Trigger.FingerMove,
                     TouchState.Dragging

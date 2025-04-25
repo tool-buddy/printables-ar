@@ -58,12 +58,12 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void ListenToStateMachine()
         {
-            _stateMachine.Configure(ApplicationState.NoModelLoaded)
+            _stateMachine.Configure(ApplicationState.AwaitingModel)
                 .OnEntry(ShowNoModelLoaded)
                 .OnExit(HideNoModelLoaded)
                 ;
 
-            _stateMachine.Configure(ApplicationState.ModelLoading)
+            _stateMachine.Configure(ApplicationState.LoadingModel)
                 .OnEntry(ShowLoading)
                 .OnExit(HideLoading)
                 ;
@@ -126,7 +126,7 @@ namespace ToolBuddy.PrintablesAR.UI
                     );
                 }
             );
-            spinnerRotationScheduledItem.Until(() => _stateMachine.State != ApplicationState.ModelLoading);
+            spinnerRotationScheduledItem.Until(() => _stateMachine.State != ApplicationState.LoadingModel);
         }
 
         private void HideLoading() =>

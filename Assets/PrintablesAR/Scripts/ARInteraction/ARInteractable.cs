@@ -78,7 +78,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     );
                     break;
                 case TouchState.Idle:
-                case TouchState.UnknownInteraction:
+                case TouchState.DetectingInteraction:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

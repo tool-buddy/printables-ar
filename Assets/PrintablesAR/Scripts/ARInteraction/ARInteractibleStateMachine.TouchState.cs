@@ -5,11 +5,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         public enum TouchState
         {
             Idle,
-
             /// <summary>
             /// Potential tap/drag/pinch
             /// </summary>
-            UnknownInteraction,
+            DetectingInteraction,
             Placing,
             Dragging,
             Pinching

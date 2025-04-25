@@ -28,7 +28,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             [NotNull] ApplicationStateMachine stateMachine,
             [NotNull] Raycaster raycaster)
         {
-            stateMachine.Configure(ApplicationStateMachine.ApplicationState.ModelSpawn)
+            stateMachine.Configure(ApplicationStateMachine.ApplicationState.SpawningModel)
                 .OnEntry(Enable)
                 .OnExit(Disable);
 

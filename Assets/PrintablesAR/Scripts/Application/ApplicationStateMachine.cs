@@ -8,7 +8,7 @@ namespace ToolBuddy.PrintablesAR.Application
     {
         public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; private set; }
 
-        public ApplicationStateMachine() : base(ApplicationState.Initialization) { }
+        public ApplicationStateMachine() : base(ApplicationState.Initializing) { }
 
         protected override void SetTriggerParameters() =>
             ModelLoadingErrorTrigger = SetTriggerParameters<string>(Trigger.ModelLoadingError);
@@ -18,22 +18,22 @@ namespace ToolBuddy.PrintablesAR.Application
             base.Configure();
 
             //todo handle model loading cancellation
-            Configure(ApplicationState.Initialization)
+            Configure(ApplicationState.Initializing)
                 .Permit(
                     Trigger.ApplicationInitialized,
-                    ApplicationState.NoModelLoaded
+                    ApplicationState.AwaitingModel
                 );
 
-            Configure(ApplicationState.NoModelLoaded)
+            Configure(ApplicationState.AwaitingModel)
                 .Permit(
                     Trigger.ModelLoadingStarted,
-                    ApplicationState.ModelLoading
+                    ApplicationState.LoadingModel
                 );
 
-            Configure(ApplicationState.ModelLoading)
+            Configure(ApplicationState.LoadingModel)
                 .Permit(
                     Trigger.ModelLoadingSuccess,
-                    ApplicationState.ModelSpawn
+                    ApplicationState.SpawningModel
                 )
                 .Permit(
                     Trigger.ModelLoadingError,
@@ -43,19 +43,19 @@ namespace ToolBuddy.PrintablesAR.Application
             Configure(ApplicationState.LoadingError)
                 .Permit(
                     Trigger.Reset,
-                    ApplicationState.NoModelLoaded
+                    ApplicationState.AwaitingModel
                 );
 
-            Configure(ApplicationState.ModelSpawn)
+            Configure(ApplicationState.SpawningModel)
                 .Permit(
                     Trigger.ModelSpawned,
-                    ApplicationState.ModelManipulation
+                    ApplicationState.ManipulatingModel
                 ); 
             
-            Configure(ApplicationState.ModelManipulation)
+            Configure(ApplicationState.ManipulatingModel)
                 .Permit(
                     Trigger.ModelLoadingStarted,
-                    ApplicationState.ModelLoading
+                    ApplicationState.LoadingModel
                 );
         }
     }

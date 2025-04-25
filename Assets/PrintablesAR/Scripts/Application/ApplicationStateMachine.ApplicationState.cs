@@ -4,12 +4,12 @@ namespace ToolBuddy.PrintablesAR.Application
     {
         public enum ApplicationState
         {
-            Initialization,
-            NoModelLoaded,
-            ModelLoading,
+            Initializing,
+            AwaitingModel,
+            LoadingModel,
             LoadingError,
-            ModelSpawn,
-            ModelManipulation
+            SpawningModel,
+            ManipulatingModel
         }
     }
 }
