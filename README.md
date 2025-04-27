@@ -10,11 +10,16 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 
 ## Development Status
 
-- **Proof of Concept with .obj files:** Complete
-- **Major Code Cleaning and Refactoring:** Complete
-- **User Experience Enhancements:** Work in Progress
-- **Additional File Formats (e.g., .stl):** Work in Progress
-- **Stress Testing / Edge Case Handling:** Not started
-- **Profiling and Performance Optimization:** Not started
-
-
+- Proof of Concept (POC) with obj Files **(Complete)**
+- POC Code Cleaning and Refactoring **(Complete)**
+- User Experience Enhancements **(Work in Progress)**
+    - 1D / 2D Rotation Switch **(Work in Progress)**
+    - Juiciness / Interaction Feedback **(Not Started)**
+    - Gestures/Back Button Support **(Not Started)**
+- Additional File Formats **(Work in Progress)**
+    - stl **(Complete)**
+    - 3mf **(Not Started)**
+- UI Finalization **(Not Started)**
+- Stress Testing **(Not Started)**
+- Performance Optimization **(Not Started)**
+- Application Publishing **(Not Started)**
