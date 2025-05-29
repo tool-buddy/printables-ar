@@ -21,8 +21,22 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
 
         private Quaternion _preDragRotation;
+        private Vector2 _currentDragStartPosition;
         private Vector3 _prePinchScale;
         private readonly TouchTransitionState _touchTransitionState = new TouchTransitionState();
+
+        private Vector2 DragVector
+        {
+            get
+            {
+                if (_stateMachine.IsInState(TouchState.Dragging) == false)
+                    throw new InvalidOperationException(
+                        $"DragVector can not be called when outside of the {nameof(TouchState.Dragging)} state"
+                    );
+
+                return _touchTransitionState.FirstPressedFinger.screenPosition - _currentDragStartPosition;
+            }
+        }
 
         #endregion
 
@@ -56,11 +70,32 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     );
 
                     break;
-                case TouchState.Dragging:
 
+                case TouchState.XDragging:
                     TransformManipulator.Rotate(
-                        _touchTransitionState.FirstPressedFinger.screenPosition
-                        - _touchTransitionState.FirstPressedFingerPosition.Value,
+                        new Vector2(
+                            DragVector.x,
+                            0
+                        ),
+                        transform,
+                        _preDragRotation,
+                        Camera.main.transform.position
+                    );
+                    break;
+                case TouchState.YDragging:
+                    TransformManipulator.Rotate(
+                        new Vector2(
+                            0,
+                            DragVector.y
+                        ),
+                        transform,
+                        _preDragRotation,
+                        Camera.main.transform.position
+                    );
+                    break;
+                case TouchState.XYDragging:
+                    TransformManipulator.Rotate(
+                        DragVector,
                         transform,
                         _preDragRotation,
                         Camera.main.transform.position
@@ -95,7 +130,13 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 .OnEntry(() => _prePinchScale = transform.localScale);
 
             _stateMachine.Configure(TouchState.Dragging)
-                .OnEntry(() => _preDragRotation = transform.rotation);
+                .OnEntry(
+                    () =>
+                    {
+                        _preDragRotation = transform.rotation;
+                        _currentDragStartPosition = _touchTransitionState.FirstPressedFingerPosition.Value;
+                    }
+                );
 
             _stateMachine.OnTransitioned(
                 t => UpdateTouchTransitionState(t)
@@ -179,10 +220,30 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             if (HasMovedBeyondThreshold() == false)
                 return;
 
-            _stateMachine.FireFingerTrigger(
-                _stateMachine.FingerMoveTrigger,
-                finger
-            );
+            switch (_stateMachine.State)
+            {
+                case TouchState.DetectingInteraction:
+                    _stateMachine.FireFingerTrigger(
+                        _stateMachine.FingerMoveTrigger,
+                        finger
+                    );
+                    break;
+                case TouchState.UndefinedDragging:
+                    _stateMachine.Fire(
+                        Mathf.Abs(DragVector.x) >= Mathf.Abs(DragVector.y)
+                            ? Trigger.XDragDetermined
+                            : Trigger.YDragDetermined
+                    );
+                    break;
+                case TouchState.XDragging:
+                    if (Mathf.Abs(DragVector.y) >= Mathf.Abs(DragVector.x))
+                        _stateMachine.Fire(Trigger.BidirectionalDragUnlocked);
+                    break;
+                case TouchState.YDragging:
+                    if (Mathf.Abs(DragVector.x) >= Mathf.Abs(DragVector.y))
+                        _stateMachine.Fire(Trigger.BidirectionalDragUnlocked);
+                    break;
+            }
         }
 
         private void ProcessFingerUp(

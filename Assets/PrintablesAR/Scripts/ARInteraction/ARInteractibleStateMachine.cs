@@ -68,6 +68,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 );
 
             Configure(TouchState.Dragging)
+                .InitialTransition(TouchState.UndefinedDragging)
                 .PermitIf(
                     Trigger.FingerUp,
                     TouchState.Idle,
@@ -78,6 +79,34 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     TouchState.Pinching,
                     () => ActiveInProgressFingerCount == 2
                 );
+
+            Configure(TouchState.UndefinedDragging)
+                .SubstateOf(TouchState.Dragging)
+                .Permit(
+                    Trigger.XDragDetermined,
+                    TouchState.XDragging
+                )
+                .Permit(
+                    Trigger.YDragDetermined,
+                    TouchState.YDragging
+                );
+
+            Configure(TouchState.XDragging)
+                .SubstateOf(TouchState.Dragging)
+                .Permit(
+                    Trigger.BidirectionalDragUnlocked,
+                    TouchState.XYDragging
+                );
+
+            Configure(TouchState.YDragging)
+                .SubstateOf(TouchState.Dragging)
+                .Permit(
+                    Trigger.BidirectionalDragUnlocked,
+                    TouchState.XYDragging
+                );
+
+            Configure(TouchState.XYDragging)
+                .SubstateOf(TouchState.Dragging);
 
             Configure(TouchState.Pinching)
                 .PermitIf(

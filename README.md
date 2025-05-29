@@ -13,8 +13,8 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 - ~~Proof of Concept (POC) with obj Files~~
 - ~~POC Code Cleaning and Refactoring~~
 - User Experience Enhancements **(Work in Progress)**
-    - 1D / 2D Rotation Switch **(Work in Progress)**
-    - Juiciness / Interaction Feedback
+    - ~~1D / 2D Rotation Switch~~
+    - Juiciness / Interaction Feedback **(Work in Progress)**
     - Gestures / Back Button Support
 - Additional File Formats
     - ~~stl~~

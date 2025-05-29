@@ -8,7 +8,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             FingerMove,
             FingerUp,
             PlacementSuccess,
-            PlacementFail
+            PlacementFail,
+            XDragDetermined,
+            YDragDetermined,
+            BidirectionalDragUnlocked,
         }
     }
 }

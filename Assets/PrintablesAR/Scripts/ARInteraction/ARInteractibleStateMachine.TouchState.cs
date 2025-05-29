@@ -11,6 +11,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             DetectingInteraction,
             Placing,
             Dragging,
+            UndefinedDragging, 
+            XDragging, 
+            YDragging, 
+            XYDragging,
             Pinching
         }
     }
