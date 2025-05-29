@@ -16,6 +16,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
 
+        private ARInteractibleFeedbackProvider _juicinessHandler;
+
         #region State
 
         private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
@@ -43,8 +45,14 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         #region Unity callbacks
 
-        private void Awake() =>
+        private void Awake()
+        {
             ConfigureStateMachine();
+            _juicinessHandler = new ARInteractibleFeedbackProvider(
+                transform,
+                _stateMachine
+            );
+        }
 
         protected virtual void OnEnable() =>
             SubscribeToTouchEvents();
@@ -112,11 +120,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                         _touchTransitionState.SecondPressedFingerPosition.Value
                     );
                     break;
-                case TouchState.Idle:
-                case TouchState.DetectingInteraction:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
