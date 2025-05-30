@@ -15,7 +15,7 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 - User Experience Enhancements **(Work in Progress)**
     - ~~1D / 2D Rotation Switch~~
     - Juiciness / Interaction Feedback **(Work in Progress)**
-    - Gestures / Back Button Support
+    - ~~Gestures / Back Button Support~~
 - Additional File Formats
     - ~~stl~~
     - 3mf

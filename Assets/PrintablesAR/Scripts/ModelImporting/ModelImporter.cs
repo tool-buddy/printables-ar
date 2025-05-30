@@ -26,6 +26,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// </summary>
         public IEnumerable<string> SupportedFileFormats => extensionToImporter.Keys;
 
+        #region Unity callbacks
+
         private void Awake()
         {
             IEnumerable<(Type Type, IEnumerable<ModelImporterAttribute> Attributes)> importerInfos = GetImporterInfos();
@@ -56,6 +58,41 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
                 }
             }
         }
+
+        private void OnEnable()
+        {
+            //todo handle multiple loadings of different files
+            //todo handle multiple loadings of same file
+            //todo handle loading of invalid file (probably reset loadedMaterial and loaded mesh)
+
+            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
+            {
+                importer.ImportSucceeded += OnImportSucceeded;
+                importer.ImportFailed += OnImportFailed;
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
+            {
+                importer.ImportSucceeded -= OnImportSucceeded;
+                importer.ImportFailed -= OnImportFailed;
+                try
+                {
+                    if(importer.IsImporting)
+                        importer.CancelImport();
+                }
+                catch (OperationCanceledException e)
+                {
+                    Debug.LogException(e);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Dynamic importer discovery
 
         private static IEnumerable<(Type Type, IEnumerable<ModelImporterAttribute> Attribute)> GetImporterInfos() =>
             AppDomain.CurrentDomain.GetAssemblies()
@@ -97,27 +134,11 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
             return importerInstance;
         }
 
-        private void OnEnable()
-        {
-            //todo handle multiple loadings of different files
-            //todo handle multiple loadings of same file
-            //todo handle loading of invalid file (probably reset loadedMaterial and loaded mesh)
+        #endregion
 
-            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
-            {
-                importer.ImportSucceeded += OnImportSucceeded;
-                importer.ImportFailed += OnImportFailed;
-            }
-        }
+        #region IModelImporter
 
-        private void OnDisable()
-        {
-            foreach (IModelImporter importer in extensionToImporter.Values.Distinct())
-            {
-                importer.ImportSucceeded -= OnImportSucceeded;
-                importer.ImportFailed -= OnImportFailed;
-            }
-        }
+        public bool IsImporting => extensionToImporter.Values.Any(i => i.IsImporting);
 
         /// <inheritdoc/>
         public bool TryImport(
@@ -127,6 +148,15 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
                 out IModelImporter importer
             )
             && importer.TryImport(filePath);
+
+        public void CancelImport()
+        {
+            foreach (IModelImporter modelImporter in extensionToImporter.Values)
+                if (modelImporter.IsImporting)
+                    modelImporter.CancelImport();
+        }
+
+        #endregion
 
         private static string PathToExtension(
             string filePath) =>

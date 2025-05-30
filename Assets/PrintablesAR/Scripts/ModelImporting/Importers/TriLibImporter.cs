@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 using TriLibCore;
 using TriLibCore.Extensions;
 using UnityEngine;
@@ -22,6 +23,11 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         /// <inheritdoc/>
         public event Action<string, string> ImportFailed;
 
+        [CanBeNull]
+        private AssetLoaderContext _currentLoadingContext;
+
+        public bool IsImporting => _currentLoadingContext != null;
+
         /// <inheritdoc/>
         public bool TryImport(
             string filePath)
@@ -33,13 +39,25 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
             return true;
         }
 
+        public void CancelImport()
+        {
+            if (_currentLoadingContext == null)
+            {
+                Debug.LogWarning("No import in progress to cancel.");
+                return;
+            }
+
+            _currentLoadingContext.CancellationTokenSource?.Cancel();
+            _currentLoadingContext = null;
+        }
+
         /// <summary>
         /// Asynchronously loads the OBJ file and creates mesh.
         /// </summary>
         /// <param name="filePath">Path to the OBJ file.</param>
         private void LoadObjAsync(
             string filePath) =>
-            AssetLoader.LoadModelFromFile(
+            _currentLoadingContext = AssetLoader.LoadModelFromFile(
                 filePath,
                 null,
                 OnMaterialsLoad,
@@ -47,12 +65,11 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
                 OnError,
                 null,
                 GetLoaderOptions(Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant())
-            );//todo handle callbacks possibly called after destroying the object
+            ); //todo handle callbacks possibly called after destroying the object
 
         private static AssetLoaderOptions GetLoaderOptions(
             string fileExtension)
         {
-
             AssetLoaderOptions loaderOptions = AssetLoader.CreateDefaultLoaderOptions();
             //to be able to get the model's bounds and center it
             loaderOptions.ReadEnabled = true;
@@ -72,8 +89,6 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
                 case "stl":
                     loaderOptions.ScaleFactor = 0.001f;
                     break;
-                default:
-                    break;
             }
 
             return loaderOptions;
@@ -83,11 +98,13 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         private void OnError(
             IContextualizedError obj)
         {
+            _currentLoadingContext = null;
+
             //todo remove log
             Debug.LogError($"An error occurred while loading your Model: {obj.GetInnerException()}");
             ImportFailed?.Invoke(
                 obj.ToString(),
-                obj.Context.PersistentDataPath
+                obj.Context?.PersistentDataPath
             );
         }
 
@@ -95,6 +112,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         private void OnMaterialsLoad(
             AssetLoaderContext assetLoaderContext)
         {
+            _currentLoadingContext = null;
+
             GameObject importedGameObject = assetLoaderContext.RootGameObject;
             string modelFilePath = assetLoaderContext.PersistentDataPath;
 

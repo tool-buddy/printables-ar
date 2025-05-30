@@ -64,10 +64,13 @@ namespace ToolBuddy.PrintablesAR.Application
             _mainUI.LoadButtonClicked += OnLoadButtonClicked;
 
             _mainUI.CreatorButtonClicked += OnCreatorButtonClicked;
+
             _uiController.LoadingErrorClosed += OnLoadingErrorClosed;
 
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
+
+            _uiController.ApplicationExitRequest += UnityEngine.Application.Quit;
         }
 
         private void OnDisable()

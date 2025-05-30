@@ -16,6 +16,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// </summary>
         event Action<string, string> ImportFailed;
 
+        bool IsImporting { get; }
+
         /// <summary>
         ///     Start loading a 3d model file from the given path
         /// </summary>
@@ -23,5 +25,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// <returns>false if file is not compatible with the importer</returns>
         bool TryImport(
             string filePath);
+
+        void CancelImport();
     }
 }

@@ -12,6 +12,7 @@ namespace ToolBuddy.PrintablesAR.UI
         private readonly MainUI _mainUI;
 
         public event Action LoadingErrorClosed;
+        public event Action ApplicationExitRequest;
 
         public UIController(
             ApplicationStateMachine stateMachine,
@@ -40,9 +41,10 @@ namespace ToolBuddy.PrintablesAR.UI
                     _mainUI.HelpOverlay,
                     TransitionDuration
                 );
-
-            if (_mainUI.IsLayerShown(_mainUI.ErrorOverlay))
+            else if (_mainUI.IsLayerShown(_mainUI.ErrorOverlay))
                 CloseLoadingError();
+            else
+                ApplicationExitRequest?.Invoke();
         }
 
         #region Initialization
@@ -104,8 +106,22 @@ namespace ToolBuddy.PrintablesAR.UI
         private const int TransitionDuration = 100;
 
         private void SetErrorMessage(
-            string errorMessage) =>
-            _mainUI.ErrorMessageLabel.text = errorMessage;
+            string errorMessage)
+        {
+            string truncatedErrorMessage;
+            {
+                const int maxMessageLength = 900;
+                truncatedErrorMessage = errorMessage.Length > maxMessageLength
+                    ? errorMessage.Substring(
+                          0,
+                          maxMessageLength
+                      )
+                      + "..."
+                    : errorMessage;
+            }
+
+            _mainUI.ErrorMessageLabel.text = truncatedErrorMessage;
+        }
 
         private void ShowNoModelLoaded() =>
             _mainUI.ShowLayer(
