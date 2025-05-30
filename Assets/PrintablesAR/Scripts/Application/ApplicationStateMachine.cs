@@ -50,8 +50,12 @@ namespace ToolBuddy.PrintablesAR.Application
                 .Permit(
                     Trigger.ModelSpawned,
                     ApplicationState.ManipulatingModel
-                ); 
-            
+                )
+                .Permit(
+                    Trigger.ModelLoadingStarted,
+                    ApplicationState.LoadingModel
+                );
+
             Configure(ApplicationState.ManipulatingModel)
                 .Permit(
                     Trigger.ModelLoadingStarted,
