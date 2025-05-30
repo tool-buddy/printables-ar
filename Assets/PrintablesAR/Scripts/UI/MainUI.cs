@@ -196,6 +196,14 @@ namespace ToolBuddy.PrintablesAR.UI
             }
         }
 
+        public bool IsLayerShown(
+            [NotNull] VisualElement layer)
+        {
+            if (layer == null)
+                throw new ArgumentNullException(nameof(layer));
+            return layer.style.display == DisplayStyle.Flex;
+        }
+
         public void HideLayer(
             [NotNull] VisualElement layer,
             int transitionDuration

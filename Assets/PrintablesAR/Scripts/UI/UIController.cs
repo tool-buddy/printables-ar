@@ -1,4 +1,6 @@
+using System;
 using ToolBuddy.PrintablesAR.Application;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
@@ -8,6 +10,8 @@ namespace ToolBuddy.PrintablesAR.UI
     {
         private readonly ApplicationStateMachine _stateMachine;
         private readonly MainUI _mainUI;
+
+        public event Action LoadingErrorClosed;
 
         public UIController(
             ApplicationStateMachine stateMachine,
@@ -24,6 +28,21 @@ namespace ToolBuddy.PrintablesAR.UI
             ListenToUI();
             ListenToStateMachine();
             //todo verify that indeed removing event listeners is not needed
+        }
+
+        public void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame == false)
+                return;
+
+            if (_mainUI.IsLayerShown(_mainUI.HelpOverlay))
+                _mainUI.HideLayer(
+                    _mainUI.HelpOverlay,
+                    TransitionDuration
+                );
+
+            if (_mainUI.IsLayerShown(_mainUI.ErrorOverlay))
+                CloseLoadingError();
         }
 
         #region Initialization
@@ -54,6 +73,7 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             _mainUI.HelpButtonClicked += ShowHelp;
             _mainUI.CloseHelpButtonClicked += HideHelp;
+            _mainUI.CloseErrorButtonClicked += CloseLoadingError;
         }
 
         private void ListenToStateMachine()
@@ -74,7 +94,6 @@ namespace ToolBuddy.PrintablesAR.UI
                     SetErrorMessage
                 )
                 .OnEntry(ShowError)
-                .OnExit(HideError)
                 ;
         }
 
@@ -140,6 +159,12 @@ namespace ToolBuddy.PrintablesAR.UI
                 _mainUI.ErrorOverlay,
                 TransitionDuration
             );
+
+        private void CloseLoadingError()
+        {
+            HideError();
+            LoadingErrorClosed?.Invoke();
+        }
 
         private void HideError() =>
             _mainUI.HideLayer(

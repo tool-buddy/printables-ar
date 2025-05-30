@@ -29,6 +29,8 @@ namespace ToolBuddy.PrintablesAR.Application
         private UIController _uiController;
 
 
+        #region Unity callbacks
+
         private void Awake()
         {
             _mainUI.Initialize(FindFirstObjectByType<UIDocument>());
@@ -57,16 +59,12 @@ namespace ToolBuddy.PrintablesAR.Application
             _stateMachine.Fire(Trigger.ApplicationInitialized);
         }
 
-        private void OnInteractableInstantiated(
-            GameObject obj) =>
-            _stateMachine.Fire(Trigger.ModelSpawned);
-
         private void OnEnable()
         {
             _mainUI.LoadButtonClicked += OnLoadButtonClicked;
 
             _mainUI.CreatorButtonClicked += OnCreatorButtonClicked;
-            _mainUI.CloseErrorButtonClicked += OnCloseErrorButtonClicked;
+            _uiController.LoadingErrorClosed += OnLoadingErrorClosed;
 
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
@@ -77,7 +75,7 @@ namespace ToolBuddy.PrintablesAR.Application
             _mainUI.LoadButtonClicked -= OnLoadButtonClicked;
 
             _mainUI.CreatorButtonClicked -= OnCreatorButtonClicked;
-            _mainUI.CloseErrorButtonClicked -= OnCloseErrorButtonClicked;
+            _uiController.LoadingErrorClosed -= OnLoadingErrorClosed;
 
             _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
             _modelImporter.ImportFailed -= OnModelImportFailed;
@@ -89,6 +87,15 @@ namespace ToolBuddy.PrintablesAR.Application
             _interactableInstantiator.Dispose();
         }
 
+
+        private void Update() =>
+            _uiController.Update();
+
+        #endregion
+
+        private void OnInteractableInstantiated(
+            GameObject obj) =>
+            _stateMachine.Fire(Trigger.ModelSpawned);
 
         /// <summary>
         ///     Handles load button click
@@ -169,10 +176,7 @@ namespace ToolBuddy.PrintablesAR.Application
             string filePath) =>
             _stateMachine.Fire(Trigger.ModelLoadingSuccess);
 
-        /// <summary>
-        ///     Closes the error overlay and returns to initial state
-        /// </summary>
-        private void OnCloseErrorButtonClicked() =>
+        private void OnLoadingErrorClosed() =>
             _stateMachine.Fire(Trigger.Reset);
 
 

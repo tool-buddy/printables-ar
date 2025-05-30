@@ -49,7 +49,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         {
             ConfigureStateMachine();
             _juicinessHandler = new ARInteractibleFeedbackProvider(
-                transform,
+                gameObject,
                 _stateMachine
             );
         }

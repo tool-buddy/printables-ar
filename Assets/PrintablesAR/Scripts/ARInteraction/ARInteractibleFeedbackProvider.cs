@@ -9,33 +9,64 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
     public class ARInteractibleFeedbackProvider
     {
         [NotNull]
-        private readonly Transform _targetTransform;
+        private readonly GameObject _interactibleGameObject;
 
         [NotNull]
-        private readonly AudioClip _placementSound;
+        private AudioClip _placementSound;
+
+        [NotNull]
+        private AudioClip _dragUnlockSound;
 
         [NotNull]
         private readonly ARInteractibleStateMachine _interactibleStateMachine;
 
+        [NotNull]
+        private AudioSource _audioSource;
+
         public ARInteractibleFeedbackProvider(
-            [NotNull] Transform targetTransform,
+            [NotNull] GameObject interactibleGameObject,
             [NotNull] ARInteractibleStateMachine interactibleStateMachine)
         {
-            _targetTransform = targetTransform ?? throw new ArgumentNullException(nameof(targetTransform));
+            _interactibleGameObject = interactibleGameObject ?? throw new ArgumentNullException(nameof(interactibleGameObject));
             _interactibleStateMachine =
                 interactibleStateMachine ?? throw new ArgumentNullException(nameof(interactibleStateMachine));
 
+            if (interactibleGameObject.gameObject.TryGetComponent(out _audioSource) == false)
+                _audioSource = interactibleGameObject.gameObject.AddComponent<AudioSource>();
+
+            LoadSounds();
+            ListenToStateChanges();
+            PlaySpawnFeedback();
+        }
+
+        private void LoadSounds()
+        {
             _placementSound = Resources.Load<AudioClip>("Sounds/impactSoft_heavy_003");
             if (_placementSound == null)
                 throw new FileNotFoundException("Placement sound file not found");
 
+            _dragUnlockSound = Resources.Load<AudioClip>("Sounds/switch3");
+            if (_dragUnlockSound == null)
+                throw new FileNotFoundException("Drag unlocking sound file not found");
+        }
+
+        private void ListenToStateChanges()
+        {
             _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.Placing)
                 .OnEntry(
                     PlayPlacementFeedback
                 );
 
-            PlaySpawnFeedback();
+            _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.XYDragging)
+                .OnEntry(
+                    PlayDragUnlockingFeedback
+                );
         }
+
+        private void PlayDragUnlockingFeedback() =>
+            _audioSource.PlayOneShot(
+                _dragUnlockSound
+            );
 
         private void PlaySpawnFeedback() =>
             PlayPlacementFeedback();
@@ -43,11 +74,12 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void PlayPlacementFeedback()
         {
             DOTween.Kill(
-                _targetTransform,
+                _interactibleGameObject,
                 true
             );
 
-            Vector3 originalScale = _targetTransform.localScale;
+            Transform transform = _interactibleGameObject.transform;
+            Vector3 originalScale = transform.localScale;
 
             const float duration = 0.25f;
             const float squashFactorY = 0.7f;
@@ -56,20 +88,19 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             const float reboundFactorXz = 0.9f;
 
             Sequence sequence = DOTween.Sequence();
-            sequence.SetTarget(_targetTransform);
+            sequence.SetTarget(_interactibleGameObject);
             // Play sound
             sequence.OnStart(
                 () =>
                 {
-                    AudioSource.PlayClipAtPoint(
-                        _placementSound,
-                        _targetTransform.position
+                    _audioSource.PlayOneShot(
+                        _placementSound
                     );
                 }
             );
             // Squash: Y down, XZ up
             sequence.Append(
-                _targetTransform.DOScale(
+                transform.DOScale(
                     new Vector3(
                         originalScale.x * stretchFactorXz,
                         originalScale.y * squashFactorY,
@@ -80,7 +111,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
             // Stretch (rebound): Y up (beyond original), XZ down (slightly below original)
             sequence.Append(
-                _targetTransform.DOScale(
+                transform.DOScale(
                     new Vector3(
                         originalScale.x * reboundFactorXz,
                         originalScale.y * reboundFactorY,
@@ -91,7 +122,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
             // Settle: Return to original scale
             sequence.Append(
-                _targetTransform.DOScale(
+                transform.DOScale(
                     originalScale,
                     duration * 0.3f
                 ).SetEase(Ease.InExpo)
