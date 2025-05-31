@@ -1,4 +1,3 @@
-using System;
 using ToolBuddy.PrintablesAR.Application;
 using UnityEngine.UIElements;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
@@ -50,7 +49,6 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI.ButtonContainer.pickingMode = PickingMode.Ignore;
         }
 
-        
 
         private void ListenToStateMachine()
         {

@@ -11,7 +11,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             PlacementFail,
             XDragDetermined,
             YDragDetermined,
-            BidirectionalDragUnlocked,
+            BidirectionalDragUnlocked
         }
     }
 }

@@ -99,7 +99,7 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void Update()
         {
-            if (Keyboard.current.escapeKey.wasPressedThisFrame 
+            if (Keyboard.current.escapeKey.wasPressedThisFrame
                 && _stateMachine.CanFire(Trigger.BackButtonPressed))
                 _stateMachine.Fire(Trigger.BackButtonPressed);
         }

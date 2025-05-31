@@ -132,7 +132,7 @@ namespace ToolBuddy.PrintablesAR.UI
             );
 
             LoadingSpinner = MandatoryQ<VisualElement>(
-                                LoadingOverlay,
+                LoadingOverlay,
                 "loading-spinner"
             );
         }
@@ -201,6 +201,7 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             if (layer == null)
                 throw new ArgumentNullException(nameof(layer));
+
             return layer.style.display == DisplayStyle.Flex;
         }
 

@@ -80,7 +80,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
                 importer.ImportFailed -= OnImportFailed;
                 try
                 {
-                    if(importer.IsImporting)
+                    if (importer.IsImporting)
                         importer.CancelImport();
                 }
                 catch (OperationCanceledException e)
