@@ -5,6 +5,7 @@ using ToolBuddy.PrintablesAR.ARInteraction;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using ToolBuddy.PrintablesAR.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
@@ -54,7 +55,11 @@ namespace ToolBuddy.PrintablesAR.Application
                 _stateMachine,
                 _mainUI
             );
+
             _uiController.Initialize();
+
+            _stateMachine.Configure(ApplicationState.Quitting)
+                .OnEntry(UnityEngine.Application.Quit);
 
             _stateMachine.Fire(Trigger.ApplicationInitialized);
         }
@@ -64,13 +69,12 @@ namespace ToolBuddy.PrintablesAR.Application
             _mainUI.LoadButtonClicked += OnLoadButtonClicked;
 
             _mainUI.CreatorButtonClicked += OnCreatorButtonClicked;
-
-            _uiController.LoadingErrorClosed += OnLoadingErrorClosed;
+            _mainUI.HelpButtonClicked += OnHelpButtonClicked;
+            _mainUI.CloseHelpButtonClicked += OnPopUpCloseButtonClicked;
+            _mainUI.CloseErrorButtonClicked += OnPopUpCloseButtonClicked;
 
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
-
-            _uiController.ApplicationExitRequest += UnityEngine.Application.Quit;
         }
 
         private void OnDisable()
@@ -78,7 +82,9 @@ namespace ToolBuddy.PrintablesAR.Application
             _mainUI.LoadButtonClicked -= OnLoadButtonClicked;
 
             _mainUI.CreatorButtonClicked -= OnCreatorButtonClicked;
-            _uiController.LoadingErrorClosed -= OnLoadingErrorClosed;
+            _mainUI.HelpButtonClicked -= OnHelpButtonClicked;
+            _mainUI.CloseHelpButtonClicked -= OnPopUpCloseButtonClicked;
+            _mainUI.CloseErrorButtonClicked -= OnPopUpCloseButtonClicked;
 
             _modelImporter.ImportSucceeded -= OnModelImportSucceeded;
             _modelImporter.ImportFailed -= OnModelImportFailed;
@@ -91,8 +97,12 @@ namespace ToolBuddy.PrintablesAR.Application
         }
 
 
-        private void Update() =>
-            _uiController.Update();
+        private void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame 
+                && _stateMachine.CanFire(Trigger.BackButtonPressed))
+                _stateMachine.Fire(Trigger.BackButtonPressed);
+        }
 
         #endregion
 
@@ -179,14 +189,16 @@ namespace ToolBuddy.PrintablesAR.Application
             string filePath) =>
             _stateMachine.Fire(Trigger.ModelLoadingSuccess);
 
-        private void OnLoadingErrorClosed() =>
-            _stateMachine.Fire(Trigger.Reset);
-
-
         /// <summary>
         ///     Opens the ToolBuddy website
         /// </summary>
         private void OnCreatorButtonClicked() =>
             UnityEngine.Application.OpenURL("https://toolbuddy.net");
+
+        private void OnPopUpCloseButtonClicked() =>
+            _stateMachine.Fire(Trigger.CloseButtonPressed);
+
+        private void OnHelpButtonClicked() =>
+            _stateMachine.Fire(Trigger.HelpButtonPressed);
     }
 }

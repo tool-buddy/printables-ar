@@ -9,8 +9,9 @@ namespace ToolBuddy.PrintablesAR.Application
             ModelLoadingSuccess,
             ModelLoadingError,
             ModelSpawned,
-            //todo rename
-            Reset
+            CloseButtonPressed,
+            HelpButtonPressed,
+            BackButtonPressed
         }
     }
 }

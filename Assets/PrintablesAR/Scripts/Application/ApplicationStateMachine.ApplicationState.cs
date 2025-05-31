@@ -7,9 +7,11 @@ namespace ToolBuddy.PrintablesAR.Application
             Initializing,
             AwaitingModel,
             LoadingModel,
-            LoadingError,
             SpawningModel,
-            ManipulatingModel
+            ManipulatingModel,
+            ShowingHelp,
+            ShowingError,
+            Quitting
         }
     }
 }

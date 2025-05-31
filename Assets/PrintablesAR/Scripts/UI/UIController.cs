@@ -1,6 +1,5 @@
 using System;
 using ToolBuddy.PrintablesAR.Application;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
@@ -10,9 +9,6 @@ namespace ToolBuddy.PrintablesAR.UI
     {
         private readonly ApplicationStateMachine _stateMachine;
         private readonly MainUI _mainUI;
-
-        public event Action LoadingErrorClosed;
-        public event Action ApplicationExitRequest;
 
         public UIController(
             ApplicationStateMachine stateMachine,
@@ -26,25 +22,8 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             SetInitialVisibility();
             SetInteractivity();
-            ListenToUI();
             ListenToStateMachine();
             //todo verify that indeed removing event listeners is not needed
-        }
-
-        public void Update()
-        {
-            if (Keyboard.current.escapeKey.wasPressedThisFrame == false)
-                return;
-
-            if (_mainUI.IsLayerShown(_mainUI.HelpOverlay))
-                _mainUI.HideLayer(
-                    _mainUI.HelpOverlay,
-                    TransitionDuration
-                );
-            else if (_mainUI.IsLayerShown(_mainUI.ErrorOverlay))
-                CloseLoadingError();
-            else
-                ApplicationExitRequest?.Invoke();
         }
 
         #region Initialization
@@ -71,32 +50,29 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI.ButtonContainer.pickingMode = PickingMode.Ignore;
         }
 
-        private void ListenToUI()
-        {
-            _mainUI.HelpButtonClicked += ShowHelp;
-            _mainUI.CloseHelpButtonClicked += HideHelp;
-            _mainUI.CloseErrorButtonClicked += CloseLoadingError;
-        }
+        
 
         private void ListenToStateMachine()
         {
             _stateMachine.Configure(ApplicationState.AwaitingModel)
                 .OnEntry(ShowNoModelLoaded)
-                .OnExit(HideNoModelLoaded)
-                ;
+                .OnExit(HideNoModelLoaded);
 
             _stateMachine.Configure(ApplicationState.LoadingModel)
                 .OnEntry(ShowLoading)
-                .OnExit(HideLoading)
-                ;
+                .OnExit(HideLoading);
 
-            _stateMachine.Configure(ApplicationState.LoadingError)
+            _stateMachine.Configure(ApplicationState.ShowingError)
                 .OnEntryFrom(
                     _stateMachine.ModelLoadingErrorTrigger,
                     SetErrorMessage
                 )
                 .OnEntry(ShowError)
-                ;
+                .OnExit(HideError);
+
+            _stateMachine.Configure(ApplicationState.ShowingHelp)
+                .OnEntry(ShowHelp)
+                .OnExit(HideHelp);
         }
 
         #endregion
@@ -175,12 +151,6 @@ namespace ToolBuddy.PrintablesAR.UI
                 _mainUI.ErrorOverlay,
                 TransitionDuration
             );
-
-        private void CloseLoadingError()
-        {
-            HideError();
-            LoadingErrorClosed?.Invoke();
-        }
 
         private void HideError() =>
             _mainUI.HideLayer(
