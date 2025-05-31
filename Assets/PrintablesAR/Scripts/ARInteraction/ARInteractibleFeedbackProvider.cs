@@ -94,7 +94,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 () =>
                 {
                     _audioSource.PlayOneShot(
-                        _placementSound
+                        _placementSound,
+                        1.5f
                     );
                 }
             );
