@@ -23,6 +23,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [NotNull]
         private AudioSource _audioSource;
 
+        private const float _volumeMultiplier = 8;
+
         public ARInteractibleFeedbackProvider(
             [NotNull] GameObject interactibleGameObject,
             [NotNull] ARInteractibleStateMachine interactibleStateMachine)
@@ -53,8 +55,13 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void ListenToStateChanges()
         {
             _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.Placing)
-                .OnEntry(
-                    PlayPlacementFeedback
+                .OnExit(
+                    transition =>
+                    {
+                        if (transition.Trigger == ARInteractibleStateMachine.Trigger.PlacementSuccess)
+                            PlayPlacementFeedback();
+                        //todo add a feedback for placement failure
+                    }
                 );
 
             _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.XYDragging)
@@ -65,7 +72,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         private void PlayDragUnlockingFeedback() =>
             _audioSource.PlayOneShot(
-                _dragUnlockSound
+                _dragUnlockSound,
+                _volumeMultiplier * 0.8f
             );
 
         private void PlaySpawnFeedback() =>
@@ -95,7 +103,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 {
                     _audioSource.PlayOneShot(
                         _placementSound,
-                        1.5f
+                        _volumeMultiplier * 3f
                     );
                 }
             );
