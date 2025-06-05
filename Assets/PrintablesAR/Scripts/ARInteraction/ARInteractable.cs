@@ -16,7 +16,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
 
-        private ARInteractibleFeedbackProvider _juicinessHandler;
+        private ARInteractibleFeedbackProvider _feedbackProvider;
 
         #region State
 
@@ -48,7 +48,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void Awake()
         {
             ConfigureStateMachine();
-            _juicinessHandler = new ARInteractibleFeedbackProvider(
+            _feedbackProvider = new ARInteractibleFeedbackProvider(
                 gameObject,
                 _stateMachine
             );
@@ -166,23 +166,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
         }
 
-        private bool HasMovedBeyondThreshold()
-        {
-            Finger firstPressedFinger = _touchTransitionState.FirstPressedFinger;
-            Assert.IsTrue(
-                firstPressedFinger != null,
-                nameof(firstPressedFinger) + " != null"
-            );
-
-            Touch firstTouch = firstPressedFinger.currentTouch;
-
-            return Vector2.Distance(
-                       firstTouch.screenPosition,
-                       firstTouch.startScreenPosition
-                   )
-                   > 10;
-        }
-
         #endregion
 
         #region Touch callbacks
@@ -257,5 +240,43 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
 
         #endregion
+
+        private bool HasMovedBeyondThreshold()
+        {
+            Finger firstPressedFinger = _touchTransitionState.FirstPressedFinger;
+            Assert.IsTrue(
+                firstPressedFinger != null,
+                nameof(firstPressedFinger) + " != null"
+            );
+
+            Touch firstTouch = firstPressedFinger.currentTouch;
+            float pixelDistance = Vector2.Distance(firstTouch.screenPosition, firstTouch.startScreenPosition);
+
+            const float movementThreshold = 0.1f;
+            return pixelDistance > ScreenCmToPixels(movementThreshold);
+        }
+
+        private static float ScreenCmToPixels(
+            float distanceInCm)
+        {
+            float distanceInInches = distanceInCm / 2.54f;
+            return distanceInInches * GetScreenDpi();
+        }
+
+        private static float GetScreenDpi()
+        {
+            const float fallbackDpi = 360f;
+
+            float dpi = Screen.dpi;
+
+            if (dpi == 0)
+            {
+                Debug.LogError($"Invalid value for screen DPI {dpi}");
+                dpi = fallbackDpi;
+            }
+
+            Debug.Log($"Screen DPI: {dpi}");
+            return dpi;
+        }
     }
 }
