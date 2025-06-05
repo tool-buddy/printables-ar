@@ -27,6 +27,15 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private Vector3 _prePinchScale;
         private readonly TouchTransitionState _touchTransitionState = new TouchTransitionState();
 
+        /// <summary>
+        /// Represents the maximal distance in centimeters that a finger can move during a linear drag operation before it is considered a bidirectional drag.
+        /// </summary>
+        private const float _linearDragMargin = 0.7f;
+        /// <summary>
+        /// Represents the minimum drag distance in centimeters before a drag operation is considered valid.
+        /// </summary>
+        private const float _dragMovementThreshold = 0.1f;
+
         private Vector2 DragVector
         {
             get
@@ -203,7 +212,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void ProcessFingerMove(
             Finger finger)
         {
-            if (HasMovedBeyondThreshold() == false)
+            if (HasMovedBeyondDragThreshold() == false)
                 return;
 
             switch (_stateMachine.State)
@@ -222,11 +231,11 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                     );
                     break;
                 case TouchState.XDragging:
-                    if (Mathf.Abs(DragVector.y) >= Mathf.Abs(DragVector.x))
+                    if (Mathf.Abs(DragVector.y) >= ScreenCmToPixels(_linearDragMargin))
                         _stateMachine.Fire(Trigger.BidirectionalDragUnlocked);
                     break;
                 case TouchState.YDragging:
-                    if (Mathf.Abs(DragVector.x) >= Mathf.Abs(DragVector.y))
+                    if (Mathf.Abs(DragVector.x) >= ScreenCmToPixels(_linearDragMargin))
                         _stateMachine.Fire(Trigger.BidirectionalDragUnlocked);
                     break;
             }
@@ -241,7 +250,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         #endregion
 
-        private bool HasMovedBeyondThreshold()
+        private bool HasMovedBeyondDragThreshold()
         {
             Finger firstPressedFinger = _touchTransitionState.FirstPressedFinger;
             Assert.IsTrue(
@@ -252,8 +261,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Touch firstTouch = firstPressedFinger.currentTouch;
             float pixelDistance = Vector2.Distance(firstTouch.screenPosition, firstTouch.startScreenPosition);
 
-            const float movementThreshold = 0.1f;
-            return pixelDistance > ScreenCmToPixels(movementThreshold);
+            return pixelDistance > ScreenCmToPixels(_dragMovementThreshold);
         }
 
         private static float ScreenCmToPixels(
