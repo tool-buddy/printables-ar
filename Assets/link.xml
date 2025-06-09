@@ -1,0 +1,5 @@
+<linker>
+  <assembly fullname="PrintablesAR">
+    <namespace fullname="ToolBuddy.PrintablesAR.ModelImporting.Importers" preserve="all"/>
+  </assembly>
+</linker>
