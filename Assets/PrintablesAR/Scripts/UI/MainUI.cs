@@ -49,6 +49,7 @@ namespace ToolBuddy.PrintablesAR.UI
         public event Action CreatorButtonClicked;
         public event Action CloseErrorButtonClicked;
         public event Action CloseHelpButtonClicked;
+        public event Action ButtonClicked;
 
         public void Initialize(
             [NotNull] UIDocument uiDocument)
@@ -150,11 +151,14 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void RegisterCallbacks()
         {
-            LoadButton.RegisterCallback<ClickEvent>(evt => LoadButtonClicked?.Invoke());
-            HelpButton.RegisterCallback<ClickEvent>(evt => HelpButtonClicked?.Invoke());
-            CreatorButton.RegisterCallback<ClickEvent>(evt => CreatorButtonClicked?.Invoke());
-            CloseErrorButton.RegisterCallback<ClickEvent>(evt => CloseErrorButtonClicked?.Invoke());
-            CloseHelpButton.RegisterCallback<ClickEvent>(evt => CloseHelpButtonClicked?.Invoke());
+            LoadButton.RegisterCallback<ClickEvent>(_ => LoadButtonClicked?.Invoke());
+            HelpButton.RegisterCallback<ClickEvent>(_ => HelpButtonClicked?.Invoke());
+            CreatorButton.RegisterCallback<ClickEvent>(_ => CreatorButtonClicked?.Invoke());
+            CloseErrorButton.RegisterCallback<ClickEvent>(_ => CloseErrorButtonClicked?.Invoke());
+            CloseHelpButton.RegisterCallback<ClickEvent>(_ => CloseHelpButtonClicked?.Invoke());
+
+            foreach (Button button in DocumentRoot.Query<Button>().ToList())
+                button.RegisterCallback<ClickEvent>(_ => ButtonClicked?.Invoke());
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
+using Assets.PrintablesAR.Scripts.UI;
+using JetBrains.Annotations;
 using System;
 using System.IO;
-using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.ARInteraction;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using ToolBuddy.PrintablesAR.UI;
@@ -34,7 +35,9 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void Awake()
         {
-            _mainUI.Initialize(FindFirstObjectByType<UIDocument>());
+            UIDocument uiDocument = FindFirstObjectByType<UIDocument>();
+
+            _mainUI.Initialize(uiDocument);
 
             if (!EnhancedTouchSupport.enabled) EnhancedTouchSupport.Enable();
 
@@ -55,8 +58,12 @@ namespace ToolBuddy.PrintablesAR.Application
                 _stateMachine,
                 _mainUI
             );
-
             _uiController.Initialize();
+
+            new UIFeedbackProvider(
+                _mainUI,
+                uiDocument.GetComponent<AudioSource>()
+            );
 
             _stateMachine.Configure(ApplicationState.Quitting)
                 .OnEntry(UnityEngine.Application.Quit);
