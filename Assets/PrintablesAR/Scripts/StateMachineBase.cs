@@ -34,14 +34,9 @@ namespace ToolBuddy.PrintablesAR
         /// <summary>
         /// Configures the state machine transitions and behaviors.
         /// </summary>
-        protected virtual void Configure() =>
-            ConfigureStateTransitionLogging();
-
-        [Conditional("DEBUG")]
-        private void ConfigureStateTransitionLogging() =>
-            OnTransitioned(
-                t => { Debug.Log($"{GetType().Name}: {t.Source} -> {t.Destination}"); }
-            );
+        protected virtual void Configure()
+        {
+        }
 
         /// <summary>
         /// Generates a UML Dot Graph representation of the state machine for debugging purposes.

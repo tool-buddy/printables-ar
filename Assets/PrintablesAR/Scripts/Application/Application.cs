@@ -1,7 +1,8 @@
+using System;
+using System.Diagnostics;
+using System.IO;
 using Assets.PrintablesAR.Scripts.UI;
 using JetBrains.Annotations;
-using System;
-using System.IO;
 using ToolBuddy.PrintablesAR.ARInteraction;
 using ToolBuddy.PrintablesAR.ModelImporting;
 using ToolBuddy.PrintablesAR.UI;
@@ -30,6 +31,8 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private UIController _uiController;
         private HintUpdater _hintUpdater;
+
+        public ApplicationState State => _stateMachine.State;
 
         #region Unity callbacks
 
@@ -73,8 +76,10 @@ namespace ToolBuddy.PrintablesAR.Application
                 _mainUI,
                 FindFirstObjectByType<ARPlaneManager>()
             );
-            
+
             _stateMachine.Fire(Trigger.ApplicationInitialized);
+
+            SetDebugDisplay();
         }
 
         private void OnEnable()
@@ -215,5 +220,12 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void OnHelpButtonClicked() =>
             _stateMachine.Fire(Trigger.HelpButtonPressed);
+
+        [Conditional("DEBUG")]
+        private void SetDebugDisplay()
+        {
+            if (gameObject.GetComponent<StateMachinesDebugDisplay>() == null)
+                gameObject.AddComponent<StateMachinesDebugDisplay>();
+        }
     }
 }

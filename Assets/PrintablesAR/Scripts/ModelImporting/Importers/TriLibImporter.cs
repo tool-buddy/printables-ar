@@ -100,8 +100,6 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         {
             _currentLoadingContext = null;
 
-            //todo remove log
-            Debug.LogError($"An error occurred while loading your Model: {obj.GetInnerException()}");
             ImportFailed?.Invoke(
                 obj.ToString(),
                 obj.Context?.PersistentDataPath
@@ -116,9 +114,6 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
 
             GameObject importedGameObject = assetLoaderContext.RootGameObject;
             string modelFilePath = assetLoaderContext.PersistentDataPath;
-
-            //todo remove log
-            Debug.Log("Materials loaded. Model fully loaded.");
 
             if (importedGameObject.GetComponentsInChildren<MeshFilter>().Any())
             {

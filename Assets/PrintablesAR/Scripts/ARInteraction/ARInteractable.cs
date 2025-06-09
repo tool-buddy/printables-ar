@@ -47,6 +47,9 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             }
         }
 
+        public TouchState State => _stateMachine.State;
+
+
         #endregion
 
 
@@ -281,7 +284,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 dpi = fallbackDpi;
             }
 
-            Debug.Log($"Screen DPI: {dpi}");
             return dpi;
         }
     }
