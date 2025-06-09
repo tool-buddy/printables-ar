@@ -151,14 +151,14 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void RegisterCallbacks()
         {
+            foreach (Button button in DocumentRoot.Query<Button>().ToList())
+                button.RegisterCallback<ClickEvent>(_ => ButtonClicked?.Invoke());
+
             LoadButton.RegisterCallback<ClickEvent>(_ => LoadButtonClicked?.Invoke());
             HelpButton.RegisterCallback<ClickEvent>(_ => HelpButtonClicked?.Invoke());
             CreatorButton.RegisterCallback<ClickEvent>(_ => CreatorButtonClicked?.Invoke());
             CloseErrorButton.RegisterCallback<ClickEvent>(_ => CloseErrorButtonClicked?.Invoke());
             CloseHelpButton.RegisterCallback<ClickEvent>(_ => CloseHelpButtonClicked?.Invoke());
-
-            foreach (Button button in DocumentRoot.Query<Button>().ToList())
-                button.RegisterCallback<ClickEvent>(_ => ButtonClicked?.Invoke());
         }
 
         /// <summary>
