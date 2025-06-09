@@ -23,6 +23,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         /// <inheritdoc/>
         public event Action<string, string> ImportFailed;
 
+        public event Action<float> OnProgress;
+
         [CanBeNull]
         private AssetLoaderContext _currentLoadingContext;
 
@@ -61,7 +63,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
                 filePath,
                 null,
                 OnMaterialsLoad,
-                null,
+                (_, progress) => OnProgress?.Invoke(progress),
                 OnError,
                 null,
                 GetLoaderOptions(Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant())

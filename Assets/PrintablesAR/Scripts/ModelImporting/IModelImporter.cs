@@ -15,6 +15,11 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// 
         /// </summary>
         event Action<string, string> ImportFailed;
+        
+        /// <summary>
+        /// Called when the import progress changes. The float value is the progress from 0 to 1.
+        /// </summary>
+        event Action<float> OnProgress;
 
         bool IsImporting { get; }
 

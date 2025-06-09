@@ -1,4 +1,6 @@
 using ToolBuddy.PrintablesAR.Application;
+using ToolBuddy.PrintablesAR.ModelImporting;
+using UnityEngine;
 using UnityEngine.UIElements;
 using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
@@ -8,13 +10,16 @@ namespace ToolBuddy.PrintablesAR.UI
     {
         private readonly ApplicationStateMachine _stateMachine;
         private readonly MainUI _mainUI;
+        private readonly IModelImporter _modelImporter;
 
         public UIController(
             ApplicationStateMachine stateMachine,
-            MainUI mainUI)
+            MainUI mainUI,
+            IModelImporter modelImporter)
         {
             _stateMachine = stateMachine;
             _mainUI = mainUI;
+            _modelImporter = modelImporter;
         }
 
         public void Initialize()
@@ -95,6 +100,8 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void ShowLoading()
         {
+            _modelImporter.OnProgress += OnLoadProgress;
+            OnLoadProgress(0f);
             _mainUI.ShowLayer(
                 _mainUI.LoadingOverlay,
                 _transitionDuration
@@ -122,11 +129,15 @@ namespace ToolBuddy.PrintablesAR.UI
             spinnerRotationScheduledItem.Until(() => _stateMachine.State != ApplicationState.LoadingModel);
         }
 
-        private void HideLoading() =>
+        private void HideLoading()
+        {
+            _modelImporter.OnProgress -= OnLoadProgress;
+
             _mainUI.HideLayer(
                 _mainUI.LoadingOverlay,
                 _transitionDuration
             );
+        }
 
         private void ShowError() =>
             _mainUI.ShowLayer(
@@ -152,6 +163,14 @@ namespace ToolBuddy.PrintablesAR.UI
                 _transitionDuration
             );
 
+        private void OnLoadProgress(
+            float progress)
+        {
+            int percentage = Mathf.FloorToInt(progress * 100);
+            percentage = Mathf.Clamp(percentage, 1, 100);
+            _mainUI.LoadingPercentage.text = $"{percentage:D3}%";
+        }
+        
         #endregion
     }
 }

@@ -31,6 +31,8 @@ namespace ToolBuddy.PrintablesAR.UI
         public Label ErrorMessageLabel { get; private set; }
 
         public VisualElement LoadingSpinner { get; private set; }
+        
+        public Label LoadingPercentage { get; private set; }
 
         public VisualElement ButtonContainer { get; private set; }
 
@@ -146,6 +148,11 @@ namespace ToolBuddy.PrintablesAR.UI
             LoadingSpinner = MandatoryQ<VisualElement>(
                 LoadingOverlay,
                 "loading-spinner"
+            );
+            
+            LoadingPercentage = MandatoryQ<Label>(
+                LoadingOverlay,
+                "loading-percentage"
             );
         }
 

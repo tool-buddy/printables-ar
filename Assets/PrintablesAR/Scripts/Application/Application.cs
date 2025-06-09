@@ -56,7 +56,8 @@ namespace ToolBuddy.PrintablesAR.Application
 
             _uiController = new UIController(
                 _stateMachine,
-                _mainUI
+                _mainUI,
+                _modelImporter
             );
             _uiController.Initialize();
 

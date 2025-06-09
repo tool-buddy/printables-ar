@@ -4,5 +4,6 @@
     <ui:VisualElement name="loading-content" class="panel-content loading-content">
         <ui:VisualElement name="loading-spinner" class="loading-spinner" />
         <ui:Label text="Loading model..." name="loading-text" class="loading-text" />
+        <ui:Label text="0%" name="loading-percentage" class="loading-text" />
     </ui:VisualElement>
 </ui:UXML>

@@ -21,6 +21,9 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         /// <inheritdoc/>
         public event Action<string, string> ImportFailed;
 
+        /// <inheritdoc/>
+        public event Action<float> OnProgress;
+
         /// <summary>
         /// List of supported file extensions.
         /// </summary>
@@ -69,6 +72,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
             {
                 importer.ImportSucceeded += OnImportSucceeded;
                 importer.ImportFailed += OnImportFailed;
+                importer.OnProgress += OnOnProgress;
             }
         }
 
@@ -78,6 +82,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
             {
                 importer.ImportSucceeded -= OnImportSucceeded;
                 importer.ImportFailed -= OnImportFailed;
+                importer.OnProgress -= OnOnProgress;
                 try
                 {
                     if (importer.IsImporting)
@@ -177,5 +182,11 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
                 err,
                 path
             );
+
+        private void OnOnProgress(
+            float progress)
+        {
+            OnProgress?.Invoke(progress);
+        }
     }
 }
