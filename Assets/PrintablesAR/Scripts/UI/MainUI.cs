@@ -18,7 +18,9 @@ namespace ToolBuddy.PrintablesAR.UI
 
         public VisualElement Hud { get; private set; }
 
-        public VisualElement MissingModelUnderlay { get; private set; }
+        public VisualElement HintLayer { get; private set; }
+        public Label HintMainLabel { get; private set; }
+        public Label HintSubLabel { get; private set; }
 
         public VisualElement LoadingOverlay { get; private set; }
 
@@ -81,10 +83,19 @@ namespace ToolBuddy.PrintablesAR.UI
                 RootElement,
                 "hud"
             );
-            MissingModelUnderlay = MandatoryQ<VisualElement>(
+            HintLayer = MandatoryQ<VisualElement>(
                 RootElement,
-                "missing-model-underlay"
+                "hint-underlay"
             );
+            HintMainLabel = MandatoryQ<Label>(
+                HintLayer,
+                "main-message"
+            );
+            HintSubLabel = MandatoryQ<Label>(
+                HintLayer,
+                "sub-message"
+            );
+
             LoadingOverlay = MandatoryQ<VisualElement>(
                 RootElement,
                 "loading-overlay"
@@ -264,6 +275,14 @@ namespace ToolBuddy.PrintablesAR.UI
                 convertedFingerPosition
             );
             return DocumentRoot.panel.Pick(testedPosition) != null;
+        }
+
+        public void SetHint(
+            string message,
+            string subMessage)
+        {
+            HintMainLabel.text = message;
+            HintSubLabel.text = subMessage;
         }
     }
 }

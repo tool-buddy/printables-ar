@@ -30,7 +30,7 @@ namespace ToolBuddy.PrintablesAR.UI
         private void SetInitialVisibility()
         {
             _mainUI.Hud.style.display = DisplayStyle.Flex;
-            _mainUI.MissingModelUnderlay.style.display = DisplayStyle.None;
+            _mainUI.HintLayer.style.display = DisplayStyle.None;
             _mainUI.LoadingOverlay.style.display = DisplayStyle.None;
             _mainUI.ErrorOverlay.style.display = DisplayStyle.None;
             _mainUI.HelpOverlay.style.display = DisplayStyle.None;
@@ -45,17 +45,13 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI.DocumentRoot.pickingMode = PickingMode.Ignore;
             _mainUI.RootElement.pickingMode = PickingMode.Ignore;
             _mainUI.Hud.pickingMode = PickingMode.Ignore;
-            _mainUI.MissingModelUnderlay.pickingMode = PickingMode.Ignore;
+            _mainUI.HintLayer.pickingMode = PickingMode.Ignore;
             _mainUI.ButtonContainer.pickingMode = PickingMode.Ignore;
         }
 
 
         private void ListenToStateMachine()
         {
-            _stateMachine.Configure(ApplicationState.AwaitingModel)
-                .OnEntry(ShowNoModelLoaded)
-                .OnExit(HideNoModelLoaded);
-
             _stateMachine.Configure(ApplicationState.LoadingModel)
                 .OnEntry(ShowLoading)
                 .OnExit(HideLoading);
@@ -77,7 +73,7 @@ namespace ToolBuddy.PrintablesAR.UI
 
         #region Event Listeners
 
-        private const int TransitionDuration = 100;
+        private const int _transitionDuration = 100;
 
         private void SetErrorMessage(
             string errorMessage)
@@ -97,23 +93,11 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI.ErrorMessageLabel.text = truncatedErrorMessage;
         }
 
-        private void ShowNoModelLoaded() =>
-            _mainUI.ShowLayer(
-                _mainUI.MissingModelUnderlay,
-                TransitionDuration
-            );
-
-        private void HideNoModelLoaded() =>
-            _mainUI.HideLayer(
-                _mainUI.MissingModelUnderlay,
-                TransitionDuration
-            );
-
         private void ShowLoading()
         {
             _mainUI.ShowLayer(
                 _mainUI.LoadingOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
             StartLoadingSpinnerRotation();
@@ -141,31 +125,31 @@ namespace ToolBuddy.PrintablesAR.UI
         private void HideLoading() =>
             _mainUI.HideLayer(
                 _mainUI.LoadingOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
         private void ShowError() =>
             _mainUI.ShowLayer(
                 _mainUI.ErrorOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
         private void HideError() =>
             _mainUI.HideLayer(
                 _mainUI.ErrorOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
         private void ShowHelp() =>
             _mainUI.ShowLayer(
                 _mainUI.HelpOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
         private void HideHelp() =>
             _mainUI.HideLayer(
                 _mainUI.HelpOverlay,
-                TransitionDuration
+                _transitionDuration
             );
 
         #endregion

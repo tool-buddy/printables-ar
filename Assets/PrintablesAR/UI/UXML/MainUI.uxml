@@ -4,12 +4,12 @@
     <ui:Template name="Error" src="project://database/Assets/PrintablesAR/UI/UXML/Error.uxml?fileID=9197481963319205126&amp;guid=6895b5960573da7449646c4dead51b31&amp;type=3#Error" />
     <ui:Template name="Help" src="project://database/Assets/PrintablesAR/UI/UXML/Help.uxml?fileID=9197481963319205126&amp;guid=7a72f0aba4288784b9501f6d4939676b&amp;type=3#Help" />
     <ui:Template name="Loading" src="project://database/Assets/PrintablesAR/UI/UXML/Loading.uxml?fileID=9197481963319205126&amp;guid=b0efa9d7fd458e948a069e4ee1d6c85a&amp;type=3#Loading" />
-    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Help.uss?fileID=7433441132597879392&amp;guid=a82893a87ab884f4c99f01749a10c783&amp;type=3#Help" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Help.uss?fileID=7433441132597879392&amp;guid=a82893a87ab884f4c99f01749a10c783&amp;type=3#Help" />
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
-    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Error.uss?fileID=7433441132597879392&amp;guid=6632d6c2f130ecd4098ea8c724a12bc4&amp;type=3#Error" />
-    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Loading.uss?fileID=7433441132597879392&amp;guid=2cce36fb1af41e340b8a5c39332a2c1d&amp;type=3#Loading" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Error.uss?fileID=7433441132597879392&amp;guid=6632d6c2f130ecd4098ea8c724a12bc4&amp;type=3#Error" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Loading.uss?fileID=7433441132597879392&amp;guid=2cce36fb1af41e340b8a5c39332a2c1d&amp;type=3#Loading" />
     <ui:VisualElement name="root" style="flex-grow: 1;">
-        <ui:Instance template="MissingModel" name="missing-model-underlay" class="overlay-panel" style="display: flex; background-color: rgba(255, 255, 255, 0.5);" />
+        <ui:Instance template="MissingModel" name="hint-underlay" class="overlay-panel" style="display: flex; background-color: rgba(255, 255, 255, 0.5);" />
         <ui:Instance template="Hud" name="hud" class="overlay-panel" style="display: flex; background-color: rgba(0, 0, 0, 0); align-items: flex-end;" />
         <ui:Instance template="Error" name="error-overlay" class="overlay-panel" style="display: flex;" />
         <ui:Instance template="Help" name="help-overlay" class="overlay-panel" style="display: flex;" />

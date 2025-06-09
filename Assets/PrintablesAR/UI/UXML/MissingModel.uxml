@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
-    <ui:VisualElement name="text-container" style="flex-grow: 1; justify-content: center;">
+    <ui:VisualElement name="text-container" style="flex-grow: 1; justify-content: center; -unity-text-align: middle-center; align-items: center; align-self: center; width: 80%;">
         <ui:Label text="No model loaded" name="main-message" class="header-1 wrappable-text" />
         <ui:Label text="Tap &apos;Load&apos; to load a model." name="sub-message" class="header-2 wrappable-text" />
     </ui:VisualElement>

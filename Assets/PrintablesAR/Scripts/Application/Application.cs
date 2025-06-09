@@ -28,7 +28,7 @@ namespace ToolBuddy.PrintablesAR.Application
         private ModelImporter _modelImporter;
 
         private UIController _uiController;
-
+        private HintUpdater _hintUpdater;
 
         #region Unity callbacks
 
@@ -61,6 +61,12 @@ namespace ToolBuddy.PrintablesAR.Application
             _stateMachine.Configure(ApplicationState.Quitting)
                 .OnEntry(UnityEngine.Application.Quit);
 
+            _hintUpdater = new HintUpdater(
+                _stateMachine,
+                _mainUI,
+                FindFirstObjectByType<ARPlaneManager>()
+            );
+            
             _stateMachine.Fire(Trigger.ApplicationInitialized);
         }
 
@@ -99,6 +105,8 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void Update()
         {
+            _hintUpdater.Update();
+
             if (Keyboard.current.escapeKey.wasPressedThisFrame
                 && _stateMachine.CanFire(Trigger.BackButtonPressed))
                 _stateMachine.Fire(Trigger.BackButtonPressed);
