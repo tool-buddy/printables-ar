@@ -16,8 +16,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
 
-        private ARInteractibleFeedbackProvider _feedbackProvider;
-
         #region State
 
         private readonly ARInteractibleStateMachine _stateMachine = new ARInteractibleStateMachine();
@@ -57,7 +55,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void Awake()
         {
             ConfigureStateMachine();
-            _feedbackProvider = new ARInteractibleFeedbackProvider(
+            new ARInteractibleFeedbackProvider(
                 gameObject,
                 _stateMachine
             );

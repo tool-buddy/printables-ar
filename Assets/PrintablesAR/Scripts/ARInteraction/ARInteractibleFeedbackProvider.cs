@@ -12,7 +12,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private readonly GameObject _interactibleGameObject;
 
         [NotNull]
-        private AudioClip _placementSound;
+        private AudioClip _successfulPlacementSound;
+
+        [NotNull]
+        private AudioClip _failedPlacementSound;
 
         [NotNull]
         private AudioClip _dragUnlockSound;
@@ -43,9 +46,13 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         private void LoadSounds()
         {
-            _placementSound = Resources.Load<AudioClip>("Sounds/impactSoft_heavy_003");
-            if (_placementSound == null)
+            _successfulPlacementSound = Resources.Load<AudioClip>("Sounds/impactSoft_heavy_003");
+            if (_successfulPlacementSound == null)
                 throw new FileNotFoundException("Placement sound file not found");
+
+            _failedPlacementSound = Resources.Load<AudioClip>("Sounds/impactBell_heavy_003");
+            if (_failedPlacementSound == null)
+                throw new FileNotFoundException("Failed placement sound file not found");
 
             _dragUnlockSound = Resources.Load<AudioClip>("Sounds/switch3");
             if (_dragUnlockSound == null)
@@ -56,12 +63,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         {
             _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.Placing)
                 .OnExit(
-                    transition =>
-                    {
-                        if (transition.Trigger == ARInteractibleStateMachine.Trigger.PlacementSuccess)
-                            PlayPlacementFeedback();
-                        //todo add a feedback for placement failure
-                    }
+                    transition => PlayPlacementFeedback(transition.Trigger)
                 );
 
             _interactibleStateMachine.Configure(ARInteractibleStateMachine.TouchState.XYDragging)
@@ -77,15 +79,35 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
 
         private void PlaySpawnFeedback() =>
-            PlayPlacementFeedback();
+            PlaySuccesfulPlacementFeedback();
 
-        private void PlayPlacementFeedback()
+        private void PlayPlacementFeedback(
+            ARInteractibleStateMachine.Trigger transitionTrigger)
         {
             DOTween.Kill(
                 _interactibleGameObject,
                 true
             );
 
+            switch (transitionTrigger)
+            {
+                case ARInteractibleStateMachine.Trigger.PlacementSuccess:
+                    PlaySuccesfulPlacementFeedback();
+                    break;
+                case ARInteractibleStateMachine.Trigger.PlacementFail:
+                    PlayFailedPlacementFeedback();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(transitionTrigger),
+                        transitionTrigger,
+                        null
+                    );
+            }
+        }
+
+        private void PlaySuccesfulPlacementFeedback()
+        {
             Transform transform = _interactibleGameObject.transform;
             Vector3 originalScale = transform.localScale;
 
@@ -102,7 +124,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 () =>
                 {
                     _audioSource.PlayOneShot(
-                        _placementSound,
+                        _successfulPlacementSound,
                         _volumeMultiplier * 3f
                     );
                 }
@@ -139,5 +161,11 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
             sequence.Play();
         }
+
+        private void PlayFailedPlacementFeedback() =>
+            _audioSource.PlayOneShot(
+                _failedPlacementSound,
+                _volumeMultiplier * 0.6f
+            );
     }
 }
