@@ -29,6 +29,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         /// Represents the maximal distance in centimeters that a finger can move during a linear drag operation before it is considered a bidirectional drag.
         /// </summary>
         private const float _linearDragMargin = 0.7f;
+
         /// <summary>
         /// Represents the minimum drag distance in centimeters before a drag operation is considered valid.
         /// </summary>
@@ -48,7 +49,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         public TouchState State => _stateMachine.State;
-
 
         #endregion
 
@@ -213,6 +213,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private void ProcessFingerMove(
             Finger finger)
         {
+            if (_touchTransitionState.FirstPressedFinger == null)
+                return;
             if (HasMovedBeyondDragThreshold() == false)
                 return;
 
@@ -260,7 +262,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             );
 
             Touch firstTouch = firstPressedFinger.currentTouch;
-            float pixelDistance = Vector2.Distance(firstTouch.screenPosition, firstTouch.startScreenPosition);
+            float pixelDistance = Vector2.Distance(
+                firstTouch.screenPosition,
+                firstTouch.startScreenPosition
+            );
 
             return pixelDistance > ScreenCmToPixels(_dragMovementThreshold);
         }
