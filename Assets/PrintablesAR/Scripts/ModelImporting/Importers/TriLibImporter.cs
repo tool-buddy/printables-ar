@@ -78,6 +78,8 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
             loaderOptions.UseUnityNativeNormalCalculator = true;
             loaderOptions.GetCompatibleTextureFormat = false;
             loaderOptions.EnforceAlphaChannelTextures = false;
+            //forcing GC leads to huge freezes. Letting GC decide when to collect.
+            loaderOptions.CollectCG = false;
 
             switch (fileExtension)
             {
