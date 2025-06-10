@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Assets.PrintablesAR.Scripts.Sound;
 using Assets.PrintablesAR.Scripts.UI;
 using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.ARInteraction;
@@ -18,6 +19,7 @@ namespace ToolBuddy.PrintablesAR.Application
     /// <summary>
     ///     Controls the UI for the 3D Printing Model Displayer
     /// </summary>
+    [RequireComponent(typeof(AudioSource))]
     public class Application : MonoBehaviour
     {
         [NotNull]
@@ -31,6 +33,7 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private UIController _uiController;
         private HintUpdater _hintUpdater;
+        private AudioPlayer _audioPlayer;
 
         public ApplicationState State => _stateMachine.State;
 
@@ -38,13 +41,13 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void Awake()
         {
-            UIDocument uiDocument = FindFirstObjectByType<UIDocument>();
-
-            _mainUI.Initialize(uiDocument);
-
             if (!EnhancedTouchSupport.enabled) EnhancedTouchSupport.Enable();
 
             _modelImporter = FindFirstObjectByType<ModelImporter>();
+
+            SetupAudio();
+
+            SetupUI();
 
             _interactableInstantiator = new ARInteractableInstantiator(
                 _modelImporter,
@@ -52,34 +55,18 @@ namespace ToolBuddy.PrintablesAR.Application
                 new Raycaster(
                     FindFirstObjectByType<ARRaycastManager>(),
                     _mainUI
-                )
+                ),
+                _audioPlayer
             );
 
             _interactableInstantiator.InteractableInstantiated += OnInteractableInstantiated;
 
-            _uiController = new UIController(
-                _stateMachine,
-                _mainUI
-            );
-            _uiController.Initialize();
-
-            new UIFeedbackProvider(
-                _mainUI,
-                uiDocument.GetComponent<AudioSource>()
-            );
-
             _stateMachine.Configure(ApplicationState.Quitting)
                 .OnEntry(UnityEngine.Application.Quit);
 
-            _hintUpdater = new HintUpdater(
-                _stateMachine,
-                _mainUI,
-                FindFirstObjectByType<ARPlaneManager>()
-            );
-
             _stateMachine.Fire(Trigger.ApplicationInitialized);
 
-            SetDebugDisplay();
+            SetupDebugDisplay();
         }
 
         private void OnEnable()
@@ -125,6 +112,40 @@ namespace ToolBuddy.PrintablesAR.Application
         }
 
         #endregion
+
+        private void SetupAudio()
+        {
+            AudioSource audioSource = GetComponent<AudioSource>();
+            _audioPlayer = new AudioPlayer(
+                audioSource
+            );
+            _audioPlayer.LoadSounds();
+        }
+
+        private void SetupUI()
+        {
+            UIDocument uiDocument = FindFirstObjectByType<UIDocument>();
+
+            _mainUI.Initialize(uiDocument);
+
+            _uiController = new UIController(
+                _stateMachine,
+                _mainUI
+            );
+
+            _uiController.Initialize();
+
+            _hintUpdater = new HintUpdater(
+                _stateMachine,
+                _mainUI,
+                FindFirstObjectByType<ARPlaneManager>()
+            );
+
+            new UIFeedbackProvider(
+                _mainUI,
+                _audioPlayer
+            );
+        }
 
         private void OnInteractableInstantiated(
             GameObject obj) =>
@@ -222,7 +243,7 @@ namespace ToolBuddy.PrintablesAR.Application
             _stateMachine.Fire(Trigger.HelpButtonPressed);
 
         [Conditional("DEBUG")]
-        private void SetDebugDisplay()
+        private void SetupDebugDisplay()
         {
             if (gameObject.GetComponent<StateMachinesDebugDisplay>() == null)
                 gameObject.AddComponent<StateMachinesDebugDisplay>();

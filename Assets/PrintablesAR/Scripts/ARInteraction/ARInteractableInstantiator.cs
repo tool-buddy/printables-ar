@@ -1,4 +1,5 @@
 using System;
+using Assets.PrintablesAR.Scripts.Sound;
 using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.ModelImporting;
@@ -18,6 +19,9 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [NotNull]
         private readonly Raycaster _raycaster;
 
+        [NotNull]
+        private readonly AudioPlayer _audioPlayer;
+
         [CanBeNull]
         private GameObject _currentInstance;
 
@@ -26,19 +30,19 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         public ARInteractableInstantiator(
             [NotNull] ModelImporter modelImporter,
             [NotNull] ApplicationStateMachine stateMachine,
-            [NotNull] Raycaster raycaster)
+            [NotNull] Raycaster raycaster,
+            [NotNull] AudioPlayer audioPlayer)
         {
             stateMachine.Configure(ApplicationStateMachine.ApplicationState.SpawningModel)
                 .OnEntry(Enable)
                 .OnExit(Disable);
 
-            //todo thorough test, and check model's visibility while loading, once you have replaced the current obj loader
-
             _modelImporter = modelImporter;
             _modelImporter.ImportSucceeded += OnModelImportSucceeded;
             _modelImporter.ImportFailed += OnModelImportFailed;
 
-            _raycaster = raycaster;
+            _raycaster = raycaster ?? throw new ArgumentNullException(nameof(raycaster));
+            _audioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
         }
 
         public void Dispose()
@@ -86,6 +90,11 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
                 _currentInstance.gameObject.SetActive(true);
                 InteractableInstantiated?.Invoke(_currentInstance);
             }
+            else if (_raycaster.IsFingerOnUI(finger.screenPosition) == false)
+                _audioPlayer.PlayOneShot(
+                    Sounds.FailedPlacement,
+                    true
+                );
         }
 
         #endregion
@@ -124,6 +133,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             _currentInstance.gameObject.SetActive(false);
             ARInteractable arInteractable = _currentInstance.AddComponent<ARInteractable>();
             arInteractable.Raycaster = _raycaster;
+            arInteractable.AudioPlayer = _audioPlayer;
+
             loadedModel.transform.SetParent(_currentInstance.transform);
         }
 

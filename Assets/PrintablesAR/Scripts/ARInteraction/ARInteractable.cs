@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.PrintablesAR.Scripts.Sound;
 using JetBrains.Annotations;
 using Stateless;
 using UnityEngine;
@@ -15,6 +16,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
     {
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
+        
+        [CanBeNull]
+        public AudioPlayer AudioPlayer { get; set; }
+
 
         #region State
 
@@ -60,7 +65,8 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             ConfigureStateMachine();
             new ARInteractibleFeedbackProvider(
                 gameObject,
-                _stateMachine
+                _stateMachine,
+                AudioPlayer
             );
         }
 

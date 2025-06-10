@@ -1,10 +1,9 @@
 using System;
-using System.IO;
+using Assets.PrintablesAR.Scripts.Sound;
 using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
-using Random = UnityEngine.Random;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
@@ -15,40 +14,21 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         private readonly GameObject _interactibleGameObject;
 
         [NotNull]
-        private AudioClip _successfulPlacementSound;
-
-        [NotNull]
-        private AudioClip _failedPlacementSound;
-
-        [NotNull]
-        private AudioClip _dragUnlockSound;
-
-        [NotNull]
-        private AudioClip _draggingSoundA;
-
-        [NotNull]
-        private AudioClip _draggingSoundB;
-
-        [NotNull]
         private readonly ARInteractibleStateMachine _interactibleStateMachine;
 
-        [NotNull]
-        private AudioSource _audioSource;
+        private readonly AudioPlayer _audioPlayer;
 
-        private const float _volumeMultiplier = 8;
 
         public ARInteractibleFeedbackProvider(
             [NotNull] GameObject interactibleGameObject,
-            [NotNull] ARInteractibleStateMachine interactibleStateMachine)
+            [NotNull] ARInteractibleStateMachine interactibleStateMachine,
+            [NotNull] AudioPlayer audioPlayer)
         {
             _interactibleGameObject = interactibleGameObject ?? throw new ArgumentNullException(nameof(interactibleGameObject));
             _interactibleStateMachine =
                 interactibleStateMachine ?? throw new ArgumentNullException(nameof(interactibleStateMachine));
 
-            if (interactibleGameObject.gameObject.TryGetComponent(out _audioSource) == false)
-                _audioSource = interactibleGameObject.gameObject.AddComponent<AudioSource>();
-
-            LoadSounds();
+            _audioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
 
             ListenToStateChanges();
             Touch.onFingerMove += OnFingerMove;
@@ -56,25 +36,6 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             PlaySpawnFeedback();
         }
 
-        private void LoadSounds()
-        {
-            _successfulPlacementSound = Resources.Load<AudioClip>("Sounds/impactSoft_heavy_003");
-            if (_successfulPlacementSound == null)
-                throw new FileNotFoundException("Placement sound file not found");
-
-            _failedPlacementSound = Resources.Load<AudioClip>("Sounds/impactBell_heavy_003");
-            if (_failedPlacementSound == null)
-                throw new FileNotFoundException("Failed placement sound file not found");
-
-            _dragUnlockSound = Resources.Load<AudioClip>("Sounds/switch3");
-            if (_dragUnlockSound == null)
-                throw new FileNotFoundException("Drag unlocking sound file not found");
-
-            _draggingSoundA = Resources.Load<AudioClip>("Sounds/broom-sweep-106601 A");
-            _draggingSoundB = Resources.Load<AudioClip>("Sounds/broom-sweep-106601 B");
-            if (_draggingSoundA == null || _draggingSoundB == null)
-                throw new FileNotFoundException("Dragging sound file not found");
-        }
 
         private void ListenToStateChanges()
         {
@@ -90,13 +51,13 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         private void PlayDragUnlockingFeedback() =>
-            _audioSource.PlayOneShot(
-                _dragUnlockSound,
-                _volumeMultiplier * 0.8f
+            _audioPlayer.PlayOneShot(
+                Sounds.DraggingUnlocked,
+                true
             );
 
         private void PlaySpawnFeedback() =>
-            PlaySuccesfulPlacementFeedback();
+            PlaySuccessfulPlacementFeedback();
 
         private void PlayPlacementFeedback(
             ARInteractibleStateMachine.Trigger transitionTrigger)
@@ -109,7 +70,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             switch (transitionTrigger)
             {
                 case ARInteractibleStateMachine.Trigger.PlacementSuccess:
-                    PlaySuccesfulPlacementFeedback();
+                    PlaySuccessfulPlacementFeedback();
                     break;
                 case ARInteractibleStateMachine.Trigger.PlacementFail:
                     PlayFailedPlacementFeedback();
@@ -123,7 +84,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             }
         }
 
-        private void PlaySuccesfulPlacementFeedback()
+        private void PlaySuccessfulPlacementFeedback()
         {
             Transform transform = _interactibleGameObject.transform;
             Vector3 originalScale = transform.localScale;
@@ -138,13 +99,10 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             sequence.SetTarget(_interactibleGameObject);
             // Play sound
             sequence.OnStart(
-                () =>
-                {
-                    _audioSource.PlayOneShot(
-                        _successfulPlacementSound,
-                        _volumeMultiplier * 3f
-                    );
-                }
+                () => _audioPlayer.PlayOneShot(
+                    Sounds.SuccessfulPlacement,
+                    true
+                )
             );
             // Squash: Y down, XZ up
             sequence.Append(
@@ -180,29 +138,23 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         }
 
         private void PlayFailedPlacementFeedback() =>
-            _audioSource.PlayOneShot(
-                _failedPlacementSound,
-                _volumeMultiplier * 0.6f
+            _audioPlayer.PlayOneShot(
+                Sounds.FailedPlacement,
+                true
             );
 
         private void OnFingerMove(
             Finger obj)
         {
-            if (_audioSource == null)
+            if (_audioPlayer == null)
                 return;
 
-            if (_audioSource.isPlaying == false
-                && (_interactibleStateMachine.IsInState(ARInteractibleStateMachine.TouchState.Dragging)
-                    || _interactibleStateMachine.IsInState(ARInteractibleStateMachine.TouchState.Pinching)))
-            {
-                AudioClip clip = Random.value < 0.5f
-                    ? _draggingSoundA
-                    : _draggingSoundB;
-                _audioSource.PlayOneShot(
-                    clip,
-                    _volumeMultiplier * 0.5f
+            if (_interactibleStateMachine.IsInState(ARInteractibleStateMachine.TouchState.Dragging)
+                || _interactibleStateMachine.IsInState(ARInteractibleStateMachine.TouchState.Pinching))
+                _audioPlayer.PlayOneShot(
+                    Sounds.Dragging,
+                    false
                 );
-            }
         }
     }
 }
