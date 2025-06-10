@@ -16,7 +16,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
     {
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
-        
+
         [CanBeNull]
         public AudioPlayer AudioPlayer { get; set; }
 

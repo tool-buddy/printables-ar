@@ -70,7 +70,10 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         private static AssetLoaderOptions GetLoaderOptions(
             string fileExtension)
         {
-            AssetLoaderOptions loaderOptions = AssetLoader.CreateDefaultLoaderOptions(false, true);
+            AssetLoaderOptions loaderOptions = AssetLoader.CreateDefaultLoaderOptions(
+                false,
+                true
+            );
             //to be able to get the model's bounds and center it
             loaderOptions.ReadEnabled = true;
             loaderOptions.LoadTexturesAsSRGB = false;

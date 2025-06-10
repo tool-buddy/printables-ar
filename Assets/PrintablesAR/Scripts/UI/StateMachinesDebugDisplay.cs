@@ -11,10 +11,10 @@ namespace ToolBuddy.PrintablesAR.UI
         private void Awake()
         {
             _application = FindAnyObjectByType<Application.Application>();
-            _labelStyle = new GUIStyle()
+            _labelStyle = new GUIStyle
             {
                 fontSize = 64,
-                normal = { textColor = Color.white}
+                normal = { textColor = Color.white }
             };
         }
 
@@ -22,11 +22,17 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             GUILayout.BeginVertical(GUI.skin.box);
 
-            GUILayout.Label($"Application: {_application.State}", _labelStyle);
+            GUILayout.Label(
+                $"Application: {_application.State}",
+                _labelStyle
+            );
 
             ARInteractable _arInteractable = FindAnyObjectByType<ARInteractable>();
             if (_arInteractable != null)
-                GUILayout.Label($"Interactable: {_arInteractable.State}", _labelStyle);
+                GUILayout.Label(
+                    $"Interactable: {_arInteractable.State}",
+                    _labelStyle
+                );
 
             GUILayout.EndVertical();
         }

@@ -17,6 +17,7 @@ namespace Assets.PrintablesAR.Scripts.Sound
         private Dictionary<Sounds, AudioClip[]> _soundClips;
         private AudioSource _audioSource;
         private Dictionary<Sounds, float> _soundVolumes;
+
         [CanBeNull]
         private AudioClip _lastPlayedClip;
 

@@ -33,7 +33,7 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             Vector2 touchPosition,
             out Pose hitPose)
         {
-            if (_ui.IsFingerOnUI(touchPosition))
+            if (IsFingerOnUI(touchPosition))
             {
                 hitPose = default;
                 return false;
