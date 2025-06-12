@@ -12,11 +12,15 @@ namespace ToolBuddy.PrintablesAR.Application
         private ApplicationState _preHelpState;
 
         public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; private set; }
+        public TriggerWithParameters<string> PermissionErrorTrigger { get; private set; }
 
         public ApplicationStateMachine() : base(ApplicationState.Initializing) { }
 
-        protected override void SetTriggerParameters() =>
+        protected override void SetTriggerParameters()
+        {
             ModelLoadingErrorTrigger = SetTriggerParameters<string>(Trigger.ModelLoadingError);
+            PermissionErrorTrigger = SetTriggerParameters<string>(Trigger.PermissionError);
+        }
 
         protected override void Configure()
         {
@@ -33,6 +37,10 @@ namespace ToolBuddy.PrintablesAR.Application
                 .Permit(
                     Trigger.ModelLoadingStarted,
                     ApplicationState.LoadingModel
+                )
+                .Permit(
+                    Trigger.PermissionError,
+                    ApplicationState.ShowingError
                 )
                 .Permit(
                     Trigger.HelpButtonPressed,

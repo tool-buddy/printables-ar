@@ -154,10 +154,18 @@ namespace ToolBuddy.PrintablesAR.Application
         /// <summary>
         ///     Handles load button click
         /// </summary>
-        private void OnLoadButtonClicked() =>
-            FilePicker.Show(
+        private async void OnLoadButtonClicked()
+        {
+            bool hadPermission = await FilePicker.Show(
                 FilePickedCallback
             );
+            if (hadPermission == false)
+                //todo can be enhanced by adding an Open Settings button in the error pop-up
+                _stateMachine.Fire(
+                    _stateMachine.PermissionErrorTrigger,
+                    ErrorMessages.PermissionError
+                );
+        }
 
         private void FilePickedCallback(
             string path)

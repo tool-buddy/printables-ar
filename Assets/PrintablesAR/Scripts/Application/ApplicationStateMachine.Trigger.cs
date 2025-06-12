@@ -8,6 +8,7 @@ namespace ToolBuddy.PrintablesAR.Application
             ModelLoadingStarted,
             ModelLoadingSuccess,
             ModelLoadingError,
+            PermissionError,
             ModelSpawned,
             CloseButtonPressed,
             HelpButtonPressed,

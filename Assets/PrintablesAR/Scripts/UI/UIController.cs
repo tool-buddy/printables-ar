@@ -61,6 +61,10 @@ namespace ToolBuddy.PrintablesAR.UI
                     _stateMachine.ModelLoadingErrorTrigger,
                     SetErrorMessage
                 )
+                .OnEntryFrom(
+                    _stateMachine.PermissionErrorTrigger,
+                    SetErrorMessage
+                )
                 .OnEntry(ShowError)
                 .OnExit(HideError);
 
