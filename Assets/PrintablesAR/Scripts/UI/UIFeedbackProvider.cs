@@ -1,9 +1,8 @@
 using System;
-using Assets.PrintablesAR.Scripts.Sound;
 using JetBrains.Annotations;
-using ToolBuddy.PrintablesAR.UI;
+using ToolBuddy.PrintablesAR.Sound;
 
-namespace Assets.PrintablesAR.Scripts.UI
+namespace ToolBuddy.PrintablesAR.UI
 {
     public class UIFeedbackProvider
     {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToolBuddy.PrintablesAR.Application;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
@@ -14,23 +15,32 @@ namespace ToolBuddy.PrintablesAR.UI
             IEnumerable<string> supportedFileFormats)
         {
             bool hadPermission;
-            if (NativeFilePicker.CheckPermission(true) == NativeFilePicker.Permission.Granted)
+            if (PermissionManager.IsFilePermissionGranted())
             {
-                PickFile(filePickedCallback, supportedFileFormats);
+                PickFile(
+                    filePickedCallback,
+                    supportedFileFormats
+                );
                 hadPermission = true;
             }
             else
             {
-                NativeFilePicker.Permission permission = await NativeFilePicker.RequestPermissionAsync(true);
+                NativeFilePicker.Permission permission = await PermissionManager.RequestFileReadPermissionAsync();
                 switch (permission)
                 {
                     case NativeFilePicker.Permission.Granted:
-                        PickFile(filePickedCallback, supportedFileFormats);
+                        PickFile(
+                            filePickedCallback,
+                            supportedFileFormats
+                        );
                         hadPermission = true;
                         break;
                     case NativeFilePicker.Permission.ShouldAsk:
                         // The permission dialog was shown again by RequestPermissionAsync. Retry
-                        hadPermission = await Show(filePickedCallback, supportedFileFormats);
+                        hadPermission = await Show(
+                            filePickedCallback,
+                            supportedFileFormats
+                        );
                         break;
                     case NativeFilePicker.Permission.Denied:
                         hadPermission = false;

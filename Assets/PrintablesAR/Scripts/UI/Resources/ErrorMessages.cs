@@ -1,4 +1,4 @@
-namespace ToolBuddy.PrintablesAR.Application
+namespace ToolBuddy.PrintablesAR.UI.Resources
 {
     public static class ErrorMessages
     {
@@ -10,6 +10,6 @@ namespace ToolBuddy.PrintablesAR.Application
         public const string LoadingError = "An error occurred when loading file:\n'{0}'.\n\nThe error was:\n{1}";
 
         public const string PermissionError =
-            "The application does not have permission to access your device's files.\nPlease grant the File/Storage permission in the App Permissions setting.";
+            "The application does not have permission to access your device's files.\nPlease grant ‘Storage’ permission in the App Permissions settings.";
     }
 }

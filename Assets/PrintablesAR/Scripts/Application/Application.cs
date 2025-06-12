@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Assets.PrintablesAR.Scripts.Sound;
-using Assets.PrintablesAR.Scripts.UI;
 using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.ARInteraction;
 using ToolBuddy.PrintablesAR.ModelImporting;
+using ToolBuddy.PrintablesAR.Sound;
 using ToolBuddy.PrintablesAR.UI;
+using ToolBuddy.PrintablesAR.UI.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.PrintablesAR.Scripts.Sound;
 using JetBrains.Annotations;
 using Stateless;
+using ToolBuddy.PrintablesAR.Sound;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem.EnhancedTouch;

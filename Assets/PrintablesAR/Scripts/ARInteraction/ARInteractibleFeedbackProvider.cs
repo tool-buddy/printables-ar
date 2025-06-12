@@ -1,7 +1,7 @@
 using System;
-using Assets.PrintablesAR.Scripts.Sound;
 using DG.Tweening;
 using JetBrains.Annotations;
+using ToolBuddy.PrintablesAR.Sound;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;

@@ -282,11 +282,11 @@ namespace ToolBuddy.PrintablesAR.UI
         }
 
         public void SetHint(
-            string message,
-            string subMessage)
+            string title,
+            string description)
         {
-            HintMainLabel.text = message;
-            HintSubLabel.text = subMessage;
+            HintMainLabel.text = title;
+            HintSubLabel.text = description;
         }
     }
 }

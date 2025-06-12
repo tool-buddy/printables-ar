@@ -1,4 +1,5 @@
 using ToolBuddy.PrintablesAR.Application;
+using ToolBuddy.PrintablesAR.UI.Resources;
 using UnityEngine.XR.ARFoundation;
 
 namespace ToolBuddy.PrintablesAR.UI
@@ -23,21 +24,29 @@ namespace ToolBuddy.PrintablesAR.UI
 
         public void Update()
         {
-            if (_stateMachine.IsInState(ApplicationStateMachine.ApplicationState.AwaitingModel)
-                || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.LoadingModel)
-                || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.ShowingError))
+            if (PermissionManager.IsCameraPermissionGranted() == false)
             {
                 _mainUI.SetHint(
-                    "No model loaded",
-                    "Tap 'Load' to load a model."
+                    HintMessages.CameraPermissionNotGrantedTitle,
+                    HintMessages.CameraPermissionNotGrantedDescription
+                );
+                ShowHintLayer();
+            }
+            else if (_stateMachine.IsInState(ApplicationStateMachine.ApplicationState.AwaitingModel)
+                     || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.LoadingModel)
+                     || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.ShowingError))
+            {
+                _mainUI.SetHint(
+                    HintMessages.ModelNotLoadedTitle,
+                    HintMessages.ModelNotLoadedDescription
                 );
                 ShowHintLayer();
             }
             else if (_arPlaneManager.trackables.count == 0)
             {
                 _mainUI.SetHint(
-                    "No environment tracked",
-                    "To scan your environment, slowly rotate and move your phone.\nThis may take several seconds."
+                    HintMessages.EnvironmentNotScannedTitle,
+                    HintMessages.EnvironmentNotScannedDescription
                 );
                 ShowHintLayer();
             }

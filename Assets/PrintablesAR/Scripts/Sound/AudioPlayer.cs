@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Assets.PrintablesAR.Scripts.Sound
+namespace ToolBuddy.PrintablesAR.Sound
 {
     /// <summary>
     /// Provides functionality for managing and playing audio clips associated with specific sound events.

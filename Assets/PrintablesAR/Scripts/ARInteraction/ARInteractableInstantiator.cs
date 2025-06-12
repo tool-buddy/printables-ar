@@ -1,8 +1,8 @@
 using System;
-using Assets.PrintablesAR.Scripts.Sound;
 using JetBrains.Annotations;
 using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.ModelImporting;
+using ToolBuddy.PrintablesAR.Sound;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem.EnhancedTouch;
