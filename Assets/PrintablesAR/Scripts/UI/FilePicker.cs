@@ -1,6 +1,8 @@
 //todo add copyright
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ToolBuddy.PrintablesAR.UI
@@ -8,12 +10,13 @@ namespace ToolBuddy.PrintablesAR.UI
     public static class FilePicker
     {
         public static async Task<bool> Show(
-            NativeFilePicker.FilePickedCallback filePickedCallback)
+            NativeFilePicker.FilePickedCallback filePickedCallback,
+            IEnumerable<string> supportedFileFormats)
         {
             bool hadPermission;
             if (NativeFilePicker.CheckPermission(true) == NativeFilePicker.Permission.Granted)
             {
-                PickFile(filePickedCallback);
+                PickFile(filePickedCallback, supportedFileFormats);
                 hadPermission = true;
             }
             else
@@ -22,12 +25,12 @@ namespace ToolBuddy.PrintablesAR.UI
                 switch (permission)
                 {
                     case NativeFilePicker.Permission.Granted:
-                        PickFile(filePickedCallback);
+                        PickFile(filePickedCallback, supportedFileFormats);
                         hadPermission = true;
                         break;
                     case NativeFilePicker.Permission.ShouldAsk:
                         // The permission dialog was shown again by RequestPermissionAsync. Retry
-                        hadPermission = await Show(filePickedCallback);
+                        hadPermission = await Show(filePickedCallback, supportedFileFormats);
                         break;
                     case NativeFilePicker.Permission.Denied:
                         hadPermission = false;
@@ -41,10 +44,20 @@ namespace ToolBuddy.PrintablesAR.UI
         }
 
         private static void PickFile(
-            NativeFilePicker.FilePickedCallback filePickedCallback) =>
+            NativeFilePicker.FilePickedCallback filePickedCallback,
+            IEnumerable<string> supportedFileFormats)
+        {
+            List<string> allowedMimeTypes;
+            {
+                allowedMimeTypes = supportedFileFormats.Select(NativeFilePicker.ConvertExtensionToFileType).ToList();
+                // This bellow necessary because ConvertExtensionToFileType does not handle at least "obj" and "3mf". The above is necessary because "application/octet-stream" does not handle at least "stl".
+                allowedMimeTypes.Add("application/octet-stream");
+            }
+
             NativeFilePicker.PickFile(
                 filePickedCallback,
-                "*/*"
+                allowedMimeTypes.ToArray()
             );
+        }
     }
 }

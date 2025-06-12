@@ -157,7 +157,8 @@ namespace ToolBuddy.PrintablesAR.Application
         private async void OnLoadButtonClicked()
         {
             bool hadPermission = await FilePicker.Show(
-                FilePickedCallback
+                FilePickedCallback,
+                _modelImporter.SupportedFileFormats
             );
             if (hadPermission == false)
                 //todo can be enhanced by adding an Open Settings button in the error pop-up
