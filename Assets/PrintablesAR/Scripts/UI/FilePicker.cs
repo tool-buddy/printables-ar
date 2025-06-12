@@ -15,39 +15,40 @@ namespace ToolBuddy.PrintablesAR.UI
             IEnumerable<string> supportedFileFormats)
         {
             bool hadPermission;
-            if (PermissionManager.IsFilePermissionGranted())
+            NativeFilePicker.Permission currentPermission = PermissionManager.GetFileReadPermission();
+            switch (currentPermission)
             {
-                PickFile(
-                    filePickedCallback,
-                    supportedFileFormats
-                );
-                hadPermission = true;
-            }
-            else
-            {
-                NativeFilePicker.Permission permission = await PermissionManager.RequestFileReadPermissionAsync();
-                switch (permission)
-                {
-                    case NativeFilePicker.Permission.Granted:
-                        PickFile(
-                            filePickedCallback,
-                            supportedFileFormats
-                        );
-                        hadPermission = true;
-                        break;
-                    case NativeFilePicker.Permission.ShouldAsk:
-                        // The permission dialog was shown again by RequestPermissionAsync. Retry
-                        hadPermission = await Show(
-                            filePickedCallback,
-                            supportedFileFormats
-                        );
-                        break;
-                    case NativeFilePicker.Permission.Denied:
-                        hadPermission = false;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case NativeFilePicker.Permission.Granted:
+                    PickFile(
+                        filePickedCallback,
+                        supportedFileFormats
+                    );
+                    hadPermission = true;
+                    break;
+                case NativeFilePicker.Permission.ShouldAsk:
+                    NativeFilePicker.Permission permission = await PermissionManager.RequestFileReadPermissionAsync();
+                    switch (permission)
+                    {
+                        case NativeFilePicker.Permission.Granted:
+                            PickFile(
+                                filePickedCallback,
+                                supportedFileFormats
+                            );
+                            hadPermission = true;
+                            break;
+                        case NativeFilePicker.Permission.ShouldAsk:
+                        case NativeFilePicker.Permission.Denied:
+                            hadPermission = false;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case NativeFilePicker.Permission.Denied:
+                    hadPermission = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return hadPermission;
