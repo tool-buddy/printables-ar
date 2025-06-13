@@ -34,7 +34,7 @@
 .button-text {
     font-size: 18px;
     color: rgb(51, 51, 51);
-    margin-right: 10px;
+    -unity-text-align: middle-center;
 }
 
 .button-icon {
@@ -62,4 +62,15 @@
     transition-duration: 0.1s;
     transition-property: all;
     transition-timing-function: ease-out-cubic;
+}
+
+.unity-label {
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
 }

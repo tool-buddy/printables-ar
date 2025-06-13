@@ -10,7 +10,7 @@
     border-radius: 25px;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .error-x {
@@ -33,7 +33,7 @@
     color: rgb(220, 53, 69);
     font-size: 22px;
     -unity-font-style: bold;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .error-message {
@@ -54,5 +54,4 @@
 
 .error-button .button-text {
     color: white;
-    margin-right: 0;
 }

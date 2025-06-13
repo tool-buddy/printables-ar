@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
-    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Loading.uss?fileID=7433441132597879392&amp;guid=2cce36fb1af41e340b8a5c39332a2c1d&amp;type=3#Loading" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Loading.uss?fileID=7433441132597879392&amp;guid=2cce36fb1af41e340b8a5c39332a2c1d&amp;type=3#Loading" />
     <ui:VisualElement name="loading-content" class="panel-content loading-content">
         <ui:VisualElement name="loading-spinner" class="loading-spinner" />
-        <ui:Label text="Loading model..." name="loading-text" class="loading-text" />
+        <ui:Label text="Loading" name="loading-text" class="loading-text" />
     </ui:VisualElement>
 </ui:UXML>
