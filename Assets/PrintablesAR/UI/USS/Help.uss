@@ -1,10 +1,9 @@
 .help-content {
-    width: 80%;
-    max-width: 400px;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
     align-items: center;
+    max-width: 60%;
 }
 
 .help-title {
@@ -22,6 +21,12 @@
     font-size: 16px;
     margin: 8px 0;
     color: rgb(85, 85, 85);
+    -unity-text-align: middle-center;
+    white-space: normal;
+    text-overflow: ellipsis;
+    margin-top: 12px;
+    -unity-paragraph-spacing: 16px;
+    margin-bottom: 12px;
 }
 
 .close-button {
