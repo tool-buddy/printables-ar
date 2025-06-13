@@ -19,7 +19,7 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 - Additional File Formats
     - ~~stl~~
     - 3mf
-- UI Finalization
-- Stress Testing
+- ~~UI Finalization~~
+- Stress Testing **(Work in Progress)**
 - Performance Optimization **(Work in Progress)**
 - Application Publishing
