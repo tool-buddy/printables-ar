@@ -22,4 +22,4 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 - ~~UI Finalization~~
 - Stress Testing **(Work in Progress)**
 - Performance Optimization **(Work in Progress)**
-- Application Publishing
+- Application Publishing **(Work in Progress)**
