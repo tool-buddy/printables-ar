@@ -254,8 +254,8 @@ namespace ToolBuddy.PrintablesAR.Application
         [Conditional("DEBUG")]
         private void SetupDebugDisplay()
         {
-            if (gameObject.GetComponent<StateMachinesDebugDisplay>() == null)
-                gameObject.AddComponent<StateMachinesDebugDisplay>();
+            if (gameObject.GetComponent<DebugDisplay>() == null)
+                gameObject.AddComponent<DebugDisplay>();
         }
     }
 }
