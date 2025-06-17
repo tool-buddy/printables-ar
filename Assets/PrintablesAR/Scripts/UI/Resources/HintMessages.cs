@@ -12,6 +12,6 @@ namespace ToolBuddy.PrintablesAR.UI.Resources
         public const string EnvironmentNotScannedTitle = "Environment Not Scanned";
 
         public const string EnvironmentNotScannedDescription =
-            "Slowly rotate and move your phone to scan your environment. This may take several seconds.";
+            "Slowly move your phone around to scan your surroundings. This may take several seconds.";
     }
 }
