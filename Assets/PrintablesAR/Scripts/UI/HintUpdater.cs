@@ -1,6 +1,7 @@
 using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.UI.Resources;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
@@ -42,7 +43,7 @@ namespace ToolBuddy.PrintablesAR.UI
                 );
                 ShowHintLayer();
             }
-            else if (_arPlaneManager.trackables.count == 0)
+            else if (HasValidEnvironmentScan() == false)
             {
                 _mainUI.SetHint(
                     HintMessages.EnvironmentNotScannedTitle,
@@ -52,6 +53,20 @@ namespace ToolBuddy.PrintablesAR.UI
             }
             else
                 HideHintLayer();
+        }
+
+        private bool HasValidEnvironmentScan()
+        {
+            bool isEnvironmentScanned = false;
+            TrackableCollection<ARPlane> trackableCollection = _arPlaneManager.trackables;
+            foreach (ARPlane arPlane in trackableCollection)
+                if (arPlane.trackingState == TrackingState.Tracking)
+                {
+                    isEnvironmentScanned = true;
+                    break;
+                }
+
+            return isEnvironmentScanned;
         }
 
         private void ShowHintLayer()
