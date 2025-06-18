@@ -1,13 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
-    <Style src="project://database/Assets/PrintablesAR/UI/USS/Screens/Error.uss?fileID=7433441132597879392&amp;guid=6632d6c2f130ecd4098ea8c724a12bc4&amp;type=3#Error" />
-    <ui:VisualElement name="error-content" class="panel-content error-content">
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Popup.uss?fileID=7433441132597879392&amp;guid=d69a663f9a21db745b9faa466e70e4d9&amp;type=3#Popup" />
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Error.uss?fileID=7433441132597879392&amp;guid=6632d6c2f130ecd4098ea8c724a12bc4&amp;type=3#Error" />
+    <ui:VisualElement name="error-popup" class="popup-window">
         <ui:VisualElement name="error-icon" class="error-icon">
             <ui:Label text="×" name="error-x" class="error-x" />
         </ui:VisualElement>
-        <ui:Label text="Error Loading Model" name="error-title" class="error-title" />
-        <ui:Label text="There was a problem loading the model file. Please try a different file. File path was &quot;undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined&quot;" name="error-message" class="error-message wrappable-text" />
-        <ui:Button name="close-error-button" class="error-button">
+        <ui:Label text="Error Loading Model" name="error-title" class="popup-title" style="color: rgb(220, 53, 69);" />
+        <ui:Label text="There was a problem loading the model file. Please try a different file. File path was &quot;undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined/undefined&quot;" name="error-message" class="error-message wrappable-text popup-content" />
+        <ui:Button name="close-error-button" class="popup-close-button error-button">
             <ui:Label text="Close" name="close-text" class="button-text" />
         </ui:Button>
     </ui:VisualElement>

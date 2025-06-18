@@ -1,14 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Common.uss?fileID=7433441132597879392&amp;guid=bc36da1b000594444beea8f8295f0e9d&amp;type=3#Common" />
     <Style src="project://database/Assets/PrintablesAR/UI/USS/Help.uss?fileID=7433441132597879392&amp;guid=a82893a87ab884f4c99f01749a10c783&amp;type=3#Help" />
-    <ui:VisualElement name="help-content" class="help-content">
-        <ui:Label text="Model Controls" name="help-title" class="help-title" />
-        <ui:VisualElement name="help-instructions" class="help-instructions">
+    <Style src="project://database/Assets/PrintablesAR/UI/USS/Popup.uss?fileID=7433441132597879392&amp;guid=d69a663f9a21db745b9faa466e70e4d9&amp;type=3#Popup" />
+    <ui:VisualElement name="help-popup" class="popup-window">
+        <ui:Label text="Model Controls" name="help-title" class="popup-title" />
+        <ui:VisualElement name="help-instructions" class="popup-content">
             <ui:Label text="&lt;b&gt;Place&lt;/b&gt;&#10;Tap on a scanned surface to place the model." class="instruction-text" />
             <ui:Label text="&lt;b&gt;Rotate&lt;/b&gt;&#10;Drag with one finger to rotate the model horizontally, vertically, or both." class="instruction-text" />
             <ui:Label text="&lt;b&gt;Scale&lt;/b&gt;&#10;Pinch with two fingers to make the model bigger or smaller." class="instruction-text" />
         </ui:VisualElement>
-        <ui:Button name="close-help-button" class="close-button">
+        <ui:Button name="close-help-button" class="popup-close-button">
             <ui:Label text="Close" name="close-text" class="button-text" />
         </ui:Button>
     </ui:VisualElement>

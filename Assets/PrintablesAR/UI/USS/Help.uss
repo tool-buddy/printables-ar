@@ -1,22 +1,3 @@
-.help-content {
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    align-items: center;
-    max-width: 60%;
-}
-
-.help-title {
-    font-size: 24px;
-    -unity-font-style: bold;
-    margin-bottom: 30px;
-    color: rgb(51, 51, 51);
-}
-
-.help-instructions {
-    margin-bottom: 20px;
-}
-
 .instruction-text {
     font-size: 16px;
     margin: 8px 0;
@@ -24,9 +5,9 @@
     -unity-text-align: middle-center;
     white-space: normal;
     text-overflow: ellipsis;
-    margin-top: 12px;
+    margin-top: 10px;
     -unity-paragraph-spacing: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .close-button {

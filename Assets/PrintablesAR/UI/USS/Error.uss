@@ -1,8 +1,3 @@
-.error-content {
-    align-items: center;
-    justify-content: center;
-}
-
 .error-icon {
     width: 50px;
     height: 50px;
@@ -29,29 +24,20 @@
     bottom: 9%;
 }
 
-.error-title {
-    color: rgb(220, 53, 69);
-    font-size: 22px;
-    -unity-font-style: bold;
-    margin-bottom: 30px;
-}
-
 .error-message {
     color: rgb(51, 51, 51);
     font-size: 16px;
-    margin-bottom: 20px;
     white-space: normal;
     -unity-text-align: center;
 }
 
 .error-button {
     background-color: rgb(220, 53, 69);
-    color: white;
     padding: 10px 20px;
     border-radius: 20px;
     border-width: 0;
 }
 
-.error-button .button-text {
-    color: white;
+.error-button > .unity-label {
+    color: rgb(255, 255, 255);
 }
