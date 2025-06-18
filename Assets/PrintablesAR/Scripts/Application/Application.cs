@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using JetBrains.Annotations;
@@ -156,9 +157,20 @@ namespace ToolBuddy.PrintablesAR.Application
         /// </summary>
         private async void OnLoadButtonClicked()
         {
+            IEnumerable<string> supportedFileFormats;
+            {
+#if UNITY_EDITOR
+                // Show all files for ease of development
+                supportedFileFormats = Array.Empty<string>();
+#else
+                supportedFileFormats = _modelImporter.SupportedFileFormats;
+#endif
+            }
+
+
             bool hadPermission = await FilePicker.Show(
                 FilePickedCallback,
-                _modelImporter.SupportedFileFormats
+                supportedFileFormats
             );
             if (hadPermission == false)
                 //todo can be enhanced by adding an Open Settings button in the error pop-up
