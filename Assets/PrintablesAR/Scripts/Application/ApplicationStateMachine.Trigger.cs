@@ -4,7 +4,8 @@ namespace ToolBuddy.PrintablesAR.Application
     {
         public enum Trigger
         {
-            ApplicationInitialized,
+            RequiredHardwareFound,
+            RequiredSoftwareFound,
             ModelLoadingStarted,
             ModelLoadingSuccess,
             ModelLoadingError,

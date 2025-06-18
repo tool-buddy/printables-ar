@@ -42,6 +42,8 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void Awake()
         {
+            SetupRequirementChecker();
+
             if (!EnhancedTouchSupport.enabled) EnhancedTouchSupport.Enable();
 
             _modelImporter = FindFirstObjectByType<ModelImporter>();
@@ -50,22 +52,10 @@ namespace ToolBuddy.PrintablesAR.Application
 
             SetupUI();
 
-            _interactableInstantiator = new ARInteractableInstantiator(
-                _modelImporter,
-                _stateMachine,
-                new Raycaster(
-                    FindFirstObjectByType<ARRaycastManager>(),
-                    _mainUI
-                ),
-                _audioPlayer
-            );
-
-            _interactableInstantiator.InteractableInstantiated += OnInteractableInstantiated;
+            SetupInteractableInstantiator();
 
             _stateMachine.Configure(ApplicationState.Quitting)
                 .OnEntry(UnityEngine.Application.Quit);
-
-            _stateMachine.Fire(Trigger.ApplicationInitialized);
 
             SetupDebugDisplay();
         }
@@ -114,6 +104,16 @@ namespace ToolBuddy.PrintablesAR.Application
 
         #endregion
 
+
+        private void SetupRequirementChecker()
+        {
+            ARRequirementChecker arRequirementChecker = new ARRequirementChecker(
+                _stateMachine,
+                FindFirstObjectByType<ARSession>()
+            );
+            StartCoroutine(arRequirementChecker.Initialize());
+        }
+
         private void SetupAudio()
         {
             AudioSource audioSource = GetComponent<AudioSource>();
@@ -146,6 +146,30 @@ namespace ToolBuddy.PrintablesAR.Application
                 _mainUI,
                 _audioPlayer
             );
+        }
+
+        private void SetupInteractableInstantiator()
+        {
+            Raycaster raycaster = new Raycaster(
+                FindFirstObjectByType<ARRaycastManager>(),
+                _mainUI
+            );
+
+            _interactableInstantiator = new ARInteractableInstantiator(
+                _modelImporter,
+                _stateMachine,
+                raycaster,
+                _audioPlayer
+            );
+
+            _interactableInstantiator.InteractableInstantiated += OnInteractableInstantiated;
+        }
+
+        [Conditional("DEBUG")]
+        private void SetupDebugDisplay()
+        {
+            if (gameObject.GetComponent<DebugDisplay>() == null)
+                gameObject.AddComponent<DebugDisplay>();
         }
 
         private void OnInteractableInstantiated(
@@ -262,12 +286,5 @@ namespace ToolBuddy.PrintablesAR.Application
 
         private void OnHelpButtonClicked() =>
             _stateMachine.Fire(Trigger.HelpButtonPressed);
-
-        [Conditional("DEBUG")]
-        private void SetupDebugDisplay()
-        {
-            if (gameObject.GetComponent<DebugDisplay>() == null)
-                gameObject.AddComponent<DebugDisplay>();
-        }
     }
 }

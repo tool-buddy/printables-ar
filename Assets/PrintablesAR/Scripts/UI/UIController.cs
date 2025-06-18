@@ -29,7 +29,7 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void SetInitialVisibility()
         {
-            _mainUI.Hud.style.display = DisplayStyle.Flex;
+            _mainUI.Hud.style.display = DisplayStyle.None;
             _mainUI.HintLayer.style.display = DisplayStyle.None;
             _mainUI.LoadingOverlay.style.display = DisplayStyle.None;
             _mainUI.ErrorOverlay.style.display = DisplayStyle.None;
@@ -52,6 +52,12 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private void ListenToStateMachine()
         {
+            _stateMachine.Configure(ApplicationState.AwaitingModel)
+                .OnEntryFrom(
+                    Trigger.RequiredSoftwareFound,
+                    ShowHud
+                );
+
             _stateMachine.Configure(ApplicationState.LoadingModel)
                 .OnEntry(ShowLoading)
                 .OnExit(HideLoading);
@@ -96,6 +102,9 @@ namespace ToolBuddy.PrintablesAR.UI
 
             _mainUI.ErrorMessageLabel.text = truncatedErrorMessage;
         }
+
+        private void ShowHud() =>
+            _mainUI.Hud.style.display = DisplayStyle.Flex;
 
         private void ShowLoading()
         {

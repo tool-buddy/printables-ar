@@ -4,7 +4,8 @@ namespace ToolBuddy.PrintablesAR.Application
     {
         public enum ApplicationState
         {
-            Initializing,
+            CheckingHardware,
+            CheckingSoftware,
             AwaitingModel,
             LoadingModel,
             SpawningModel,

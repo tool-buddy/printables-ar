@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToolBuddy.PrintablesAR.ARInteraction;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -53,7 +54,9 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             GUILayout.BeginVertical(GUI.skin.box);
             {
+                GUILayout.Space(100);
                 DrawStates();
+                DrawPermissions();
                 DrawFPS();
                 DrawSelectors();
                 DrawTrackedPlanes();
@@ -65,10 +68,16 @@ namespace ToolBuddy.PrintablesAR.UI
         {
             ARInteractable arInteractable = FindAnyObjectByType<ARInteractable>();
             GUILayout.Label(
-                $"States: {_application.State} - {arInteractable?.State}",
+                $"States: {_application.State} - {arInteractable?.State} - {ARSession.state}",
                 _labelStyle.Value
             );
         }
+
+        private void DrawPermissions() =>
+            GUILayout.Label(
+                $"Permissions: Cam {Permission.HasUserAuthorizedPermission(Permission.Camera)} - File {Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead)}",
+                _labelStyle.Value
+            );
 
         private void DrawFPS() =>
             GUILayout.Label(

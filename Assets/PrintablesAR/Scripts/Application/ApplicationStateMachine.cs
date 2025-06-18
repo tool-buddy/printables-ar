@@ -14,7 +14,7 @@ namespace ToolBuddy.PrintablesAR.Application
         public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; private set; }
         public TriggerWithParameters<string> PermissionErrorTrigger { get; private set; }
 
-        public ApplicationStateMachine() : base(ApplicationState.Initializing) { }
+        public ApplicationStateMachine() : base(ApplicationState.CheckingHardware) { }
 
         protected override void SetTriggerParameters()
         {
@@ -26,11 +26,24 @@ namespace ToolBuddy.PrintablesAR.Application
         {
             base.Configure();
 
-            //todo handle model loading cancellation
-            Configure(ApplicationState.Initializing)
+            Configure(ApplicationState.CheckingHardware)
                 .Permit(
-                    Trigger.ApplicationInitialized,
+                    Trigger.RequiredHardwareFound,
+                    ApplicationState.CheckingSoftware
+                )
+                .Permit(
+                    Trigger.BackButtonPressed,
+                    ApplicationState.Quitting
+                );
+
+            Configure(ApplicationState.CheckingSoftware)
+                .Permit(
+                    Trigger.RequiredSoftwareFound,
                     ApplicationState.AwaitingModel
+                )
+                .Permit(
+                    Trigger.BackButtonPressed,
+                    ApplicationState.Quitting
                 );
 
             Configure(ApplicationState.AwaitingModel)

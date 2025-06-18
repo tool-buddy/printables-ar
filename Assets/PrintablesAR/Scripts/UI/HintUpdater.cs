@@ -1,7 +1,9 @@
+using System;
 using ToolBuddy.PrintablesAR.Application;
 using ToolBuddy.PrintablesAR.UI.Resources;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using ApplicationState = ToolBuddy.PrintablesAR.Application.ApplicationStateMachine.ApplicationState;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
@@ -25,34 +27,68 @@ namespace ToolBuddy.PrintablesAR.UI
 
         public void Update()
         {
-            if (PermissionManager.IsCameraPermissionGranted() == false)
-            {
-                _mainUI.SetHint(
+            if (_stateMachine.IsInState(ApplicationState.CheckingHardware)
+                || _stateMachine.IsInState(ApplicationState.CheckingSoftware))
+                DisplayInitializationHints();
+            else if (PermissionManager.IsCameraPermissionGranted() == false)
+                ShowHint(
                     HintMessages.CameraPermissionNotGrantedTitle,
                     HintMessages.CameraPermissionNotGrantedDescription
                 );
-                ShowHintLayer();
-            }
-            else if (_stateMachine.IsInState(ApplicationStateMachine.ApplicationState.AwaitingModel)
-                     || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.LoadingModel)
-                     || _stateMachine.IsInState(ApplicationStateMachine.ApplicationState.ShowingError))
-            {
-                _mainUI.SetHint(
+            else if (_stateMachine.IsInState(ApplicationState.AwaitingModel)
+                     || _stateMachine.IsInState(ApplicationState.LoadingModel)
+                     || _stateMachine.IsInState(ApplicationState.ShowingError))
+                ShowHint(
                     HintMessages.ModelNotLoadedTitle,
                     HintMessages.ModelNotLoadedDescription
                 );
-                ShowHintLayer();
-            }
             else if (HasValidEnvironmentScan() == false)
-            {
-                _mainUI.SetHint(
+                ShowHint(
                     HintMessages.EnvironmentNotScannedTitle,
                     HintMessages.EnvironmentNotScannedDescription
                 );
-                ShowHintLayer();
-            }
             else
                 HideHintLayer();
+        }
+
+        private void ShowHint(
+            string title,
+            string description)
+        {
+            _mainUI.SetHint(
+                title,
+                description
+            );
+            ShowHintLayer();
+        }
+
+        private void DisplayInitializationHints()
+        {
+            switch (ARSession.state)
+            {
+                case ARSessionState.Unsupported:
+                    ShowHint(
+                        HintMessages.ArUnsupportedTitle,
+                        HintMessages.ArUnsupportedDescription
+                    );
+                    break;
+                case ARSessionState.NeedsInstall:
+                    ShowHint(
+                        HintMessages.ArSoftwareNorInstalledTitle,
+                        HintMessages.ArSoftwareNorInstalledDescription
+                    );
+                    break;
+                case ARSessionState.Ready:
+                case ARSessionState.SessionInitializing:
+                case ARSessionState.SessionTracking:
+                case ARSessionState.None:
+                case ARSessionState.Installing:
+                case ARSessionState.CheckingAvailability:
+                    //nothing
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private bool HasValidEnvironmentScan()
