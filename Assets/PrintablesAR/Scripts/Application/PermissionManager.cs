@@ -15,7 +15,7 @@ namespace ToolBuddy.PrintablesAR.Application
 #endif
         }
 
-        public static NativeFilePicker.Permission GetFileReadPermission() =>
+        public static bool IsFileReadPermissionGranted() =>
             NativeFilePicker.CheckPermission(true);
 
         public static async Task<NativeFilePicker.Permission> RequestFileReadPermissionAsync() =>

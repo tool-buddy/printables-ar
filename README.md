@@ -4,9 +4,16 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 
 ## Requirements
 
-- [TriLib 2](https://assetstore.unity.com/packages/tools/modeling/trilib-2-model-loading-package-157548) to be placed at /Assets/Plugins/
-- [DOTween](https://dotween.demigiant.com/download.php) to be placed at /Assets/Plugins/
-- [XR Simulation Environments 2.0.1](https://github.com/Unity-Technologies/com.unity.xr-content.xr-sim-environments/releases/download/2.0.1/com.unity.xr-content.xr-sim-environments-2.0.1.tgz) to be placed at /Packages/
+- [TriLib 2]
+    - Source: https://assetstore.unity.com/packages/tools/modeling/trilib-2-model-loading-package-157548
+    - Version: 2.4.4
+- [DOTween]
+    - Source: https://dotween.demigiant.com/download.php
+    - Version: 1.2.765
+- [XR Simulation Environments]
+    - Source: https://github.com/Unity-Technologies/com.unity.xr-content.xr-sim-environments/releases/download/2.0.1/com.unity.xr-content.xr-sim-environments-2.0.1.tgz
+    - Version: 2.0.1
+
 
 ## Development Status
 
