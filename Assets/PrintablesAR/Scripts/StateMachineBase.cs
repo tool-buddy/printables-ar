@@ -1,7 +1,6 @@
-using System.Diagnostics;
+using JetBrains.Annotations;
 using Stateless;
 using Stateless.Graph;
-using Debug = UnityEngine.Debug;
 
 namespace ToolBuddy.PrintablesAR
 {
@@ -23,7 +22,6 @@ namespace ToolBuddy.PrintablesAR
         {
             SetTriggerParameters();
             Configure();
-            GenerateUmlDotGraph();
         }
 
         /// <summary>
@@ -34,21 +32,14 @@ namespace ToolBuddy.PrintablesAR
         /// <summary>
         /// Configures the state machine transitions and behaviors.
         /// </summary>
-        protected virtual void Configure()
-        {
-        }
+        protected virtual void Configure() { }
 
         /// <summary>
-        /// Generates a UML Dot Graph representation of the state machine for debugging purposes.
+        /// Generates a Mermaid diagram representation of the state machine.
         /// </summary>
-        [Conditional("DEBUG")]
-        protected virtual void GenerateUmlDotGraph() =>
-            Debug.Log(
-                $@"{GetType().Name} state machine graph:
-
-{UmlDotGraph.Format(GetInfo())}
-
-Past the generated UML Dot Graph in http://www.webgraphviz.com/ to visualize it."
-            );
+        /// <returns>A string containing the Mermaid diagram.</returns>
+        [UsedImplicitly] //Used by the Tools/UpdateStateDiagram.csproj
+        public string GetMermaidDiagram() =>
+            MermaidGraph.Format(GetInfo());
     }
 }

@@ -78,8 +78,8 @@ crashlytics-build.properties
 /.vsconfig
 /packages.config
 /UIElementsSchema
-/Assets/PrintablesAR/Models
-/Assets/PrintablesAR/Models.meta
+/Assets/Models
+/Assets/Models.meta
 /Assets/PrintablesAR/Todo.md
 /Assets/PrintablesAR/Todo.md.meta
 /Assets/Unity Boilerplate.meta
@@ -96,3 +96,5 @@ crashlytics-build.properties
 /Assets/Sounds
 /Assets/Sounds.meta
 /Keys/
+/Tools/obj
+/Tools/bin
