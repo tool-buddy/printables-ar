@@ -13,7 +13,7 @@ namespace ToolBuddy.PrintablesAR.Sound
     /// </summary>
     public class AudioPlayer
     {
-        private const float _volumeMultiplier = 8;
+        private const float _volumeMultiplier = 2;
         private Dictionary<Sounds, AudioClip[]> _soundClips;
         private AudioSource _audioSource;
         private Dictionary<Sounds, float> _soundVolumes;
@@ -46,7 +46,7 @@ namespace ToolBuddy.PrintablesAR.Sound
 
             _soundVolumes = new Dictionary<Sounds, float>
             {
-                { Sounds.SuccessfulPlacement, 3f },
+                { Sounds.SuccessfulPlacement, 1.8f },
                 { Sounds.FailedPlacement, 0.6f },
                 { Sounds.DraggingUnlocked, 0.8f },
                 { Sounds.Dragging, 0.5f },
