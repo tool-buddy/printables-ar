@@ -57,6 +57,7 @@ stateDiagram-v2
     - ~~stl~~
     - 3mf
 - ~~UI Finalization~~
-- Stress Testing **(Work in Progress)**
-- Performance Optimization **(Work in Progress)**
+- ~~Stress Testing~~
+- ~~Performance Optimization~~
 - Application Publishing **(Work in Progress)**
+	- Mandatory 14-day Google Play Closed Testing. Please contact me if you would like to participate.
