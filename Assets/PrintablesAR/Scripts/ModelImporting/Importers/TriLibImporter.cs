@@ -13,7 +13,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
     /// </summary>
     [ModelImporter("obj")]
     [ModelImporter("stl")]
-    //todo add all relevant formats
+    [ModelImporter("3mf")]
     public class TriLibImporter : IModelImporter
     {
         //todo renaming and doc
@@ -97,6 +97,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
                     );
                     break;
                 case "stl":
+                case "3mf":
                     loaderOptions.ScaleFactor = 0.001f;
                     break;
             }

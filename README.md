@@ -53,9 +53,9 @@ stateDiagram-v2
     - ~~1D / 2D Rotation Switch~~
     - ~~Gestures / Back Button Support~~
     - ~~Juiciness / Interaction Feedback~~
-- Additional File Formats
+- ~~Support Additional File Formats~~
     - ~~stl~~
-    - 3mf
+    - ~~3mf~~
 - ~~UI Finalization~~
 - ~~Stress Testing~~
 - ~~Performance Optimization~~
