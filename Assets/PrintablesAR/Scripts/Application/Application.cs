@@ -181,20 +181,9 @@ namespace ToolBuddy.PrintablesAR.Application
         /// </summary>
         private async void OnLoadButtonClicked()
         {
-            IEnumerable<string> supportedFileFormats;
-            {
-#if UNITY_EDITOR
-                // Show all files for ease of development
-                supportedFileFormats = Array.Empty<string>();
-#else
-                supportedFileFormats = _modelImporter.SupportedFileFormats;
-#endif
-            }
-
-
             bool hadPermission = await FilePicker.Show(
                 FilePickedCallback,
-                supportedFileFormats
+                Array.Empty<string>() // Allow all file types because of issues with .stl files on some of the testers devices (.stl files being grayed out in the file picker dialog)
             );
             if (hadPermission == false)
                 //todo can be enhanced by adding an Open Settings button in the error pop-up
