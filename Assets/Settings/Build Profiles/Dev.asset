@@ -163,8 +163,16 @@ MonoBehaviour:
     - line: '|   loadStoreDebugModeEnabled: 0'
     - line: '|   visionOSBundleVersion: 1.0'
     - line: '|   tvOSBundleVersion: 1.0'
-    - line: '|   bundleVersion: 0.1.0'
-    - line: '|   preloadedAssets: []'
+    - line: '|   bundleVersion: 0.9.0'
+    - line: '|   preloadedAssets:'
+    - line: '|   - {fileID: 7409956309476867576, guid: 3fd4fc0127790db4bae83f7b77da8d45,
+        type: 2}'
+    - line: '|   - {fileID: 11400000, guid: c199e683398494f32b4cde18e73ab731, type:
+        2}'
+    - line: '|   - {fileID: 4800000, guid: c9f956787b1d945e7b36e0516201fc76, type:
+        3}'
+    - line: '|   - {fileID: 4800000, guid: 0945859e5a1034c2cb6dce53cb4fb899, type:
+        3}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   m_HolographicPauseOnTrackingLoss: 1'
@@ -196,8 +204,8 @@ MonoBehaviour:
     - line: '|     iPhone: 0'
     - line: '|     tvOS: 0'
     - line: '|   overrideDefaultApplicationIdentifier: 1'
-    - line: '|   AndroidBundleVersionCode: 1'
-    - line: '|   AndroidMinSdkVersion: 30'
+    - line: '|   AndroidBundleVersionCode: 4'
+    - line: '|   AndroidMinSdkVersion: 28'
     - line: '|   AndroidTargetSdkVersion: 0'
     - line: '|   AndroidPreferredInstallLocation: 0'
     - line: '|   aotOptions: '
@@ -308,7 +316,7 @@ MonoBehaviour:
     - line: '|   androidGamepadSupportLevel: 0'
     - line: '|   AndroidMinifyRelease: 0'
     - line: '|   AndroidMinifyDebug: 0'
-    - line: '|   AndroidValidateAppBundleSize: 1'
+    - line: '|   AndroidValidateAppBundleSize: 0'
     - line: '|   AndroidAppBundleSizeToValidate: 150'
     - line: '|   AndroidReportGooglePlayAppDependencies: 1'
     - line: '|   androidSymbolsSizeThreshold: 800'
@@ -873,7 +881,7 @@ MonoBehaviour:
     - line: '|   scriptingBackend:'
     - line: '|     Android: 1'
     - line: '|   il2cppCompilerConfiguration:'
-    - line: '|     Android: 0'
+    - line: '|     Android: 2'
     - line: '|   il2cppCodeGeneration:'
     - line: '|     Android: 1'
     - line: '|   il2cppStacktraceInformation:'
@@ -996,7 +1004,7 @@ MonoBehaviour:
         m_ConnectProfiler: 1
         m_BuildWithDeepProfilingSupport: 0
         m_AllowDebugging: 1
-        m_WaitForManagedDebugger: 0
+        m_WaitForManagedDebugger: 1
         m_ManagedDebuggerFixedPort: 0
         m_ExplicitNullChecks: 0
         m_ExplicitDivideByZeroChecks: 0

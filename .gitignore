@@ -78,6 +78,7 @@ crashlytics-build.properties
 /.vsconfig
 /packages.config
 /UIElementsSchema
+/Models
 /Assets/Models
 /Assets/Models.meta
 /Assets/PrintablesAR/Todo.md
