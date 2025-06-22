@@ -6,7 +6,7 @@ An augmented reality (AR) mobile application for previewing 3D printing models i
 
 - [TriLib 2]
     - Source: https://assetstore.unity.com/packages/tools/modeling/trilib-2-model-loading-package-157548
-    - Version: 2.4.4
+    - Version: 2.5.5
 - [DOTween]
     - Source: https://dotween.demigiant.com/download.php
     - Version: 1.2.765
