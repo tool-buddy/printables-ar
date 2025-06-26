@@ -16,7 +16,6 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
     [ModelImporter("3mf")]
     public class TriLibImporter : IModelImporter
     {
-        //todo renaming and doc
         /// <inheritdoc/>
         public event Action<GameObject, string> ImportSucceeded;
 
@@ -26,6 +25,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
         [CanBeNull]
         private AssetLoaderContext _currentLoadingContext;
 
+        /// <inheritdoc/>
         public bool IsImporting => _currentLoadingContext != null;
 
         /// <inheritdoc/>
@@ -39,6 +39,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting.Importers
             return true;
         }
 
+        /// <inheritdoc/>
         public void CancelImport()
         {
             if (_currentLoadingContext == null)

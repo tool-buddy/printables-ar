@@ -12,11 +12,20 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
+    /// <summary>
+    /// A component that makes a GameObject AR interactable object.
+    /// </summary>
     public partial class ARInteractable : MonoBehaviour
     {
+        /// <summary>
+        /// Gets or sets the <see cref="Raycaster"/> used for hit testing against the AR environment.
+        /// </summary>
         [CanBeNull]
         public Raycaster Raycaster { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="AudioPlayer"/> for providing audio feedback.
+        /// </summary>
         [CanBeNull]
         public AudioPlayer AudioPlayer { get; set; }
 
@@ -53,6 +62,9 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             }
         }
 
+        /// <summary>
+        /// Gets the current touch interaction state of the object.
+        /// </summary>
         public TouchState State => _stateMachine.State;
 
         #endregion

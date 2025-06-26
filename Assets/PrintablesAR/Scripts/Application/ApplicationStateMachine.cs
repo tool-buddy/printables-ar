@@ -11,9 +11,19 @@ namespace ToolBuddy.PrintablesAR.Application
         /// </summary>  
         private ApplicationState _preHelpState;
 
+        /// <summary>
+        /// Trigger for when a model fails to load, carrying an error message.
+        /// </summary>
         public TriggerWithParameters<string> ModelLoadingErrorTrigger { get; private set; }
+        
+        /// <summary>
+        /// Trigger for when a required permission is not granted, carrying an error message.
+        /// </summary>
         public TriggerWithParameters<string> PermissionErrorTrigger { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationStateMachine"/> class.
+        /// </summary>
         public ApplicationStateMachine() : base(ApplicationState.CheckingHardware) { }
 
         protected override void SetTriggerParameters()

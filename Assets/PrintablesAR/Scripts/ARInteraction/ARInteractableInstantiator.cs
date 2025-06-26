@@ -11,6 +11,9 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
+    /// <summary>
+    /// A class responsible for instantiating AR-interactable objects.
+    /// </summary>
     public class ARInteractableInstantiator : IDisposable
     {
         [NotNull]
@@ -25,8 +28,18 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
         [CanBeNull]
         private GameObject _currentInstance;
 
+        /// <summary>
+        /// An event that is fired when a new interactable object has been instantiated.
+        /// </summary>
         public event Action<GameObject> InteractableInstantiated;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ARInteractableInstantiator"/> class.
+        /// </summary>
+        /// <param name="modelImporter">The model importer.</param>
+        /// <param name="stateMachine">The application state machine.</param>
+        /// <param name="raycaster">The raycaster for hit testing.</param>
+        /// <param name="audioPlayer">The audio player for sound feedback.</param>
         public ARInteractableInstantiator(
             [NotNull] ModelImporter modelImporter,
             [NotNull] ApplicationStateMachine stateMachine,
@@ -45,6 +58,9 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
             _audioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
         }
 
+        /// <summary>
+        /// Cleans up resources and unsubscribes from events.
+        /// </summary>
         public void Dispose()
         {
             Disable();

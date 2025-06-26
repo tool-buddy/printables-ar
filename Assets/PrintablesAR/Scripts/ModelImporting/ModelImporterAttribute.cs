@@ -8,6 +8,9 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
         Inherited = false,
         AllowMultiple = true
     )]
+    /// <summary>
+    /// An attribute to mark classes as model importers for specific file extensions.
+    /// </summary>
     public class ModelImporterAttribute : Attribute
     {
         /// <summary>

@@ -138,6 +138,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
 
         #region IModelImporter
 
+        /// <inheritdoc/>
         public bool IsImporting => extensionToImporter.Values.Any(i => i.IsImporting);
 
         /// <inheritdoc/>
@@ -149,6 +150,7 @@ namespace ToolBuddy.PrintablesAR.ModelImporting
             )
             && importer.TryImport(filePath);
 
+        /// <inheritdoc/>
         public void CancelImport()
         {
             foreach (IModelImporter modelImporter in extensionToImporter.Values)

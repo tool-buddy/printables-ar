@@ -2,8 +2,15 @@
 
 namespace ToolBuddy.PrintablesAR.Application
 {
+    /// <summary>
+    /// A class for handling runtime permissions.
+    /// </summary>
     public static class PermissionManager
     {
+        /// <summary>
+        /// Checks if the application has been granted camera permission.
+        /// </summary>
+        /// <returns><see langword="true"/> if camera permission is granted; otherwise, <see langword="false"/>.</returns>
         public static bool IsCameraPermissionGranted()
         {
 #if UNITY_EDITOR
@@ -15,9 +22,17 @@ namespace ToolBuddy.PrintablesAR.Application
 #endif
         }
 
+        /// <summary>
+        /// Checks if the application has been granted permission to read external storage.
+        /// </summary>
+        /// <returns><see langword="true"/> if file read permission is granted; otherwise, <see langword="false"/>.</returns>
         public static bool IsFileReadPermissionGranted() =>
             NativeFilePicker.CheckPermission(true);
 
+        /// <summary>
+        /// Asynchronously requests permission to read from external storage.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous permission request operation.</returns>
         public static async Task<NativeFilePicker.Permission> RequestFileReadPermissionAsync() =>
             await NativeFilePicker.RequestPermissionAsync(true);
     }

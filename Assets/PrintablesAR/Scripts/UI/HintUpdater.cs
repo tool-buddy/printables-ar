@@ -7,6 +7,9 @@ using ApplicationState = ToolBuddy.PrintablesAR.Application.ApplicationStateMach
 
 namespace ToolBuddy.PrintablesAR.UI
 {
+    /// <summary>
+    /// A class responsible for updating the hint messages displayed to the user.
+    /// </summary>
     public class HintUpdater
     {
         private readonly ARPlaneManager _arPlaneManager;
@@ -15,6 +18,12 @@ namespace ToolBuddy.PrintablesAR.UI
 
         private const int _transitionDuration = 100;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HintUpdater"/> class.
+        /// </summary>
+        /// <param name="stateMachine">The application state machine.</param>
+        /// <param name="mainUI">The main UI.</param>
+        /// <param name="arPlaneManager">The AR plane manager.</param>
         public HintUpdater(
             ApplicationStateMachine stateMachine,
             MainUI mainUI,
@@ -25,6 +34,9 @@ namespace ToolBuddy.PrintablesAR.UI
             _arPlaneManager = arPlaneManager;
         }
 
+        /// <summary>
+        /// Updates the hint display based on the current application state and conditions.
+        /// </summary>
         public void Update()
         {
             if (_stateMachine.IsInState(ApplicationState.CheckingHardware)

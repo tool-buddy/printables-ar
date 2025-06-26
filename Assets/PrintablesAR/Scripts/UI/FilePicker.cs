@@ -9,6 +9,9 @@ using ToolBuddy.PrintablesAR.Application;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
+    /// <summary>
+    /// A class for showing the native file picker.
+    /// </summary>
     public static class FilePicker
     {
         /// <summary>

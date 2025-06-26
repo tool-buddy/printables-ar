@@ -8,6 +8,9 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace ToolBuddy.PrintablesAR.ARInteraction
 {
+    /// <summary>
+    /// Provides visual and audio feedback for interactions with <see cref="ARInteractable"/>s.
+    /// </summary>
     public class ARInteractibleFeedbackProvider
     {
         [NotNull]
@@ -18,7 +21,12 @@ namespace ToolBuddy.PrintablesAR.ARInteraction
 
         private readonly AudioPlayer _audioPlayer;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ARInteractibleFeedbackProvider"/> class.
+        /// </summary>
+        /// <param name="interactibleGameObject">The game object that is interactable.</param>
+        /// <param name="interactibleStateMachine">The state machine for the interactable object.</param>
+        /// <param name="audioPlayer">The audio player for sound feedback.</param>
         public ARInteractibleFeedbackProvider(
             [NotNull] GameObject interactibleGameObject,
             [NotNull] ARInteractibleStateMachine interactibleStateMachine,

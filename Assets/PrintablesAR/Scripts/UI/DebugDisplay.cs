@@ -9,6 +9,9 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
+    /// <summary>
+    /// A component for displaying debug information on the screen.
+    /// </summary>
     public class DebugDisplay : MonoBehaviour
     {
         private Application.Application _application;

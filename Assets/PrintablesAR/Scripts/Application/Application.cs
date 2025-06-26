@@ -36,6 +36,9 @@ namespace ToolBuddy.PrintablesAR.Application
         private HintUpdater _hintUpdater;
         private AudioPlayer _audioPlayer;
 
+        /// <summary>
+        /// Gets the current state of the application's state machine.
+        /// </summary>
         public ApplicationState State => _stateMachine.State;
 
         #region Unity callbacks

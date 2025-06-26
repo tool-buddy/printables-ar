@@ -21,6 +21,10 @@ namespace ToolBuddy.PrintablesAR.Sound
         [CanBeNull]
         private AudioClip _lastPlayedClip;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioPlayer"/> class.
+        /// </summary>
+        /// <param name="audioSource">The audio source to use for playing sounds.</param>
         public AudioPlayer(
             [NotNull] AudioSource audioSource)
         {
@@ -28,6 +32,9 @@ namespace ToolBuddy.PrintablesAR.Sound
             _soundClips = new Dictionary<Sounds, AudioClip[]>();
         }
 
+        /// <summary>
+        /// Loads all the necessary audio clips from resources.
+        /// </summary>
         public void LoadSounds()
         {
             _soundClips[Sounds.SuccessfulPlacement] = new[] { Resources.Load<AudioClip>("Sounds/impactSoft_heavy_003") };

@@ -4,11 +4,19 @@ using static ToolBuddy.PrintablesAR.Application.ApplicationStateMachine;
 
 namespace ToolBuddy.PrintablesAR.UI
 {
+    /// <summary>
+    /// A class that controls the visibility and interactivity of UI elements based on the application's state.
+    /// </summary>
     public class UIController
     {
         private readonly ApplicationStateMachine _stateMachine;
         private readonly MainUI _mainUI;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UIController"/> class.
+        /// </summary>
+        /// <param name="stateMachine">The application state machine.</param>
+        /// <param name="mainUI">The main UI.</param>
         public UIController(
             ApplicationStateMachine stateMachine,
             MainUI mainUI)
@@ -17,6 +25,9 @@ namespace ToolBuddy.PrintablesAR.UI
             _mainUI = mainUI;
         }
 
+        /// <summary>
+        /// Sets up the initial state of the UI and registers event listeners.
+        /// </summary>
         public void Initialize()
         {
             SetInitialVisibility();
