@@ -2,15 +2,7 @@
 
 An augmented reality (AR) mobile application for previewing 3D printing models in a real-world environment.
 
-<p align="center">
-  <video 
-  	controls 
-	width="25%"
-	title="Printables AR 0.9.0 Demonstration"
-    src="docs/videos/0.9.0.mp4">
-    Your browser does not support the video tag.
-  </video>
-</p>
+https://github.com/user-attachments/assets/66c42c37-4ae5-4185-acdc-17469750731a
 
 ## Requirements
 
